@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class DataPersister  implements DataPersisterInterface 
 {
-
+ 
 private UserPasswordHasherInterface $passwordHasher;
 private EntityManagerInterface $entityManager;
 private ?TokenInterface $token;
@@ -61,7 +61,12 @@ $this->entityManager->flush();
 //Suppression des données
 public function remove($data)
 {
-$this->entityManager->remove($data);
+
+    $etatClient=$data->getEtat();
+    if ($etatClient=="fidel") {
+        $data->setEtat("supprimer");
+    }
+$this->entityManager->persist($data);
 $this->entityManager->flush();
 }
 

@@ -2,16 +2,25 @@
 
 namespace App\Entity;
 
+use App\Entity\Burger;
+use App\Entity\Frites;
+use App\Entity\Boisson;
+use App\Entity\Produit;
 use Doctrine\ORM\Mapping as ORM;
+use PhpParser\Node\Expr\FuncCall;
 use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+
 #[ApiResource( 
      collectionOperations:[
-        "get",
+        "get"=>[
+            'normalization_context' => ['groups' => ['produit:menu:read']]
+        ],
         "post"
-     ]
+     ],
+     itemOperations:["put","get"]
 )]
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu extends Produit
@@ -30,6 +39,7 @@ class Menu extends Produit
         $this->burgers = new ArrayCollection();
         $this->portionDeFrites = new ArrayCollection();
         $this->boissons = new ArrayCollection();
+        
     }
 
     /**
@@ -103,8 +113,43 @@ class Menu extends Produit
 
         return $this;
     }
-}
 
+    public function prixTotalBurger($menu){
+        $prix=0;
+        $burgers=$menu->getBurgers();
+        foreach ($burgers as $burger) {
+            $prix+=$burger->getPrix();
+        }
+        return $prix;
+    }
+
+    public function prixTotalFrite($menu){
+        $prix=0;
+        $portionDeFrite=$menu->getPortionDeFrites();
+        foreach ($portionDeFrite as $frite) {
+            $prix+=$frite->getPrix();
+        }
+        return $prix;
+    }
+    public function prixTotalBoisson($menu){
+        $prix=0;
+        $boissons=$menu->getPortionDeFrites();
+        foreach ( $boissons as  $boisson) {
+            $prix+= $boisson->getPrix();
+        }
+        return $prix;
+    }
+
+
+    public function prixMenu($menuCommande){
+        $totalBurger=$menuCommande->prixTotalBurger($menuCommande);
+        $totalFrite=$menuCommande->prixTotalFrite($menuCommande);
+        $totalBoisson=$menuCommande->prixTotalBoisson($menuCommande);
+        return $totalBurger+$totalBoisson+$totalFrite;
+    }
+    
+}
+                  
     
 
     

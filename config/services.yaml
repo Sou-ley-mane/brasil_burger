@@ -25,7 +25,13 @@ services:
         tags:
             - { name: doctrine.event_listener, event: prePersist}
 
-    App\DataProvider\catalogueProvider:
-         tags: [ { name: 'api_platform.collection_data_provider'} ]
+    # App\DataProvider\catalogProvider:
+    #     tags: 
+    #         - { name: 'api_platform.collection_data_provider'} 
+            
+
+    # App\DataProvider\ComplementProvider:
+    #      tags: [ { name: 'api_platform.collection_data_provider'} ]
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

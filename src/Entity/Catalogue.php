@@ -13,7 +13,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
         'path'=>"/catalogue",
         ] ,
     ],
-    itemOperations:[])]
+    itemOperations:[]
+    )]
 class Catalogue
 {
   

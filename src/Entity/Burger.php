@@ -11,8 +11,25 @@ use ApiPlatform\Core\Annotation\ApiResource;
     
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
 #[ApiResource(
+    attributes:[
+        // Securuté globale dans une ressource 
+        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        // "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
 
-    )]
+    itemOperations:["put","get" =>[],"delete"
+],
+    collectionOperations:[
+        "post"=>[
+        
+            'denormalization_context' => ['groups' => ["produit:write:burger"]]
+        ],
+        "get"=>[
+            'normalization_context' => ['groups' => ['produit:read:burger']],],
+       
+            ]
+        
+)]
 class Burger extends Produit
 {
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'burgers')]

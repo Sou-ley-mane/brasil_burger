@@ -26,7 +26,15 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 //les operations
 #[ApiResource(
     collectionOperations:[
-        "get","post"],
+        "post",
+        "get",
+        "post_register" => [
+        "method"=>"post",
+        'path'=>'/register',
+        // 'denormalization_context' => ['groups' => ['user:write']],
+        // 'normalization_context' => ['groups' => ['user:read:simple']]
+        ],
+        ],
     itemOperations:["put","get"]
  )]
 class User extends Personne implements UserInterface, PasswordAuthenticatedUserInterface
@@ -35,13 +43,13 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     // #[ORM\GeneratedValue]
     // #[ORM\Column(type: 'integer')]
     // private $id;
-
+    #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
-
+    // #[Groups(['user:read:simple'])]
     #[ORM\Column(type: 'string')]
     private $password;
 

@@ -4,7 +4,9 @@ namespace App\EventSubscriber;
 
 
 use App\Entity\Burger;
+use App\Entity\Livreur;
 use App\Entity\Produit;
+use App\Entity\User;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -50,7 +52,7 @@ private TokenInterface $token;
     
 public function prePersist(LifecycleEventArgs $args)
 {
-    if ($args->getObject() instanceof Burger) {
+    if ($args->getObject() instanceof Produit ) {
      $args->getObject()->setGestionnaire($this->getUtilisateur());
 }
 }

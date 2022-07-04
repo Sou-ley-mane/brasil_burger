@@ -18,8 +18,4 @@ use ApiPlatform\Core\Annotation\ApiResource;
 class Complement 
 {
  
-   
-
-
- 
 }

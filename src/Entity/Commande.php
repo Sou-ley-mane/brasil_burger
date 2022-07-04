@@ -19,9 +19,9 @@ class Commande
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $etatCmd;
+    private $etatCmd="false";
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'string')]
     private $numCmd;
 
     #[ORM\Column(type: 'datetime')]
@@ -47,8 +47,8 @@ class Commande
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
     private $livraison;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class)]
-    private $ligneDeCmd;
+    // #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class)]
+    // private $ligneDeCmd;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
     private $zone;
@@ -56,12 +56,15 @@ class Commande
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'commandes')]
     private $gestionnaire;
 
+    #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'commandes')]
+    private $produits;
+
     public function __construct()
     {
-        // $this->produits = new ArrayCollection();
-        $this->ligneDeCmd = new ArrayCollection();
+        $this->produits = new ArrayCollection();
     }
 
+   
   
 
  
@@ -157,29 +160,7 @@ class Commande
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Produit>
-    //  */
-    // public function getProduits(): Collection
-    // {
-    //     return $this->produits;
-    // }
-
-    // public function addProduit(Produit $produit): self
-    // {
-    //     if (!$this->produits->contains($produit)) {
-    //         $this->produits[] = $produit;
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeProduit(Produit $produit): self
-    // {
-    //     $this->produits->removeElement($produit);
-
-    //     return $this;
-    // }
+   
 
     public function getLivraison(): ?Livraison
     {
@@ -193,36 +174,7 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection<int, LigneCommande>
-     */
-    public function getLigneDeCmd(): Collection
-    {
-        return $this->ligneDeCmd;
-    }
-
-    public function addLigneDeCmd(LigneCommande $ligneDeCmd): self
-    {
-        if (!$this->ligneDeCmd->contains($ligneDeCmd)) {
-            $this->ligneDeCmd[] = $ligneDeCmd;
-            $ligneDeCmd->setCommande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLigneDeCmd(LigneCommande $ligneDeCmd): self
-    {
-        if ($this->ligneDeCmd->removeElement($ligneDeCmd)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneDeCmd->getCommande() === $this) {
-                $ligneDeCmd->setCommande(null);
-            }
-        }
-
-        return $this;
-    }
-
+  
     public function getZone(): ?Zone
     {
         return $this->zone;
@@ -243,6 +195,33 @@ class Commande
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Produit>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(Produit $produit): self
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits[] = $produit;
+            $produit->addCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(Produit $produit): self
+    {
+        if ($this->produits->removeElement($produit)) {
+            $produit->removeCommande($this);
+        }
 
         return $this;
     }

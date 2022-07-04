@@ -7,15 +7,28 @@ use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-#[ApiResource]
+use Symfony\Component\Serializer\Annotation\Groups;
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+            'normalization_context' => ['groups' => ['personne:read:client']]
+    ]
+    ,"post"],
+    itemOperations:["put","get","delete"=>[
+        //Securité d'une opération
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security"=>"Votre profile ne vous permet pas d'effectuer une suppression"
+    ]]
+)]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client extends User
 { 
    
-
+    #[Groups(['personne:read:client'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $adresse;
-
+    
+    #[Groups(['personne:read:client'])]
     #[ORM\Column(type: 'string', length: 100)]
     private $telephone;
 

@@ -19,12 +19,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
     #[ORM\GeneratedValue]
     
     #[ORM\Column(type: 'integer')]
-    #[Groups(['burger:read:simple','burger:write:simple'])]
+    // #[Groups(['burger:read:simple','burger:write:simple'])]
     private $id;
 
+    #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $prenom;
 
+    #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 200)]
     private $nom;
 

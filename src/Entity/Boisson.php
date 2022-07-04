@@ -9,7 +9,11 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:["get","post"],
+    itemOperations:["put","get"]
+
+)]
 class Boisson extends Produit
 {
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'boissons')]

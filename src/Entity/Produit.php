@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name:"type",type:"string")]
@@ -21,19 +22,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
      ])]
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-#[ApiResource]
-// #[ApiResource(
-//     collectionOperations:[
-//     "get"=> [
-//         'status' => Response::HTTP_OK,
-//         'normalization_context' => ['groups' => ['burger:read:simple']],
-//         ] ,
-//     "post"=> [
-//         // 'status' => Response::HTTP_CREATED,
-//         'denormalization_context' => ['groups' => ['burger:write:simple']],
-//         ] , 
-//     ],
-//     itemOperations:["put","get"])]
+#[ApiResource(
+
+)]
+
 class Produit
 {
     #[ORM\Id]
@@ -41,18 +33,24 @@ class Produit
     #[ORM\Column(type: 'integer')]
     protected $id;
 
-    //  #[Groups(['burger:read:simple','burger:write:simple'])]
+    #[Groups([
+    'produit:read:burger',
+    'produit:menu:read',
+    "produit:write:burger"
+    ]
+    )]
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
     protected $nomProduit;
 
- 
-    // #[Groups(['burger:read:simple','burger:write:simple'])]
-
+   
+    #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
     #[ORM\Column(type: 'string', length: 255)]
     protected $image;
 
-    // #[Groups(['burger:read:simple','burger:write:simple'])]
-
+    // #[Groups(['produit:menu:read'])]
+    #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
@@ -60,8 +58,17 @@ class Produit
     #[ORM\Column(type: 'string', length: 255)]
     protected $etatProduit="true";
 
+    // #[Groups(['produit:read:burger'])]
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
     private $gestionnaire;
+    // #[Groups(['produit:read:burger'])]
+    #[ORM\ManyToMany(targetEntity: Commande::class, inversedBy: 'produits')]
+    private $commandes;
+
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
 
   
 
@@ -129,6 +136,30 @@ class Produit
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        $this->commandes->removeElement($commande);
 
         return $this;
     }
