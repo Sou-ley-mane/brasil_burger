@@ -11,6 +11,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 #[ApiResource(
+    attributes:[
+        // Securuté globale dans une ressource 
+        "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
     collectionOperations:["get"=>[
         'normalization_context' => ['groups' => ['personne:livreur:read']]
     ],"post"],

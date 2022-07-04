@@ -10,8 +10,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
+    attributes:[
+        // Securuté globale dans une ressource 
+        "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
     collectionOperations:["get","post"],
-    itemOperations:["put","get"]
+    itemOperations:["put","get","delete"]
 
 )]
 class Boisson extends Produit

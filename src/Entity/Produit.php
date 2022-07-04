@@ -6,11 +6,13 @@ use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\Collection;
 // use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiResource;
+use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
-use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+// use Symfony\Component\Validator\Validator\ValidatorInterface;
+// use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name:"type",type:"string")]
@@ -31,6 +33,7 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    // #[Groups(["produit:write:burger"])]
     protected $id;
 
     #[Groups([
@@ -51,6 +54,7 @@ class Produit
 
     // #[Groups(['produit:menu:read'])]
     #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
+    #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
@@ -143,10 +147,10 @@ class Produit
     /**
      * @return Collection<int, Commande>
      */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
+    // public function getCommandes(): Collection
+    // {
+    //     return $this->commandes;
+    // }
 
     public function addCommande(Commande $commande): self
     {

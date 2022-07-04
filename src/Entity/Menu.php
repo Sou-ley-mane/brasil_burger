@@ -12,22 +12,32 @@ use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource( 
+    attributes:[
+        // Securuté globale dans une ressource 
+        "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
      collectionOperations:[
         "get"=>[
             'normalization_context' => ['groups' => ['produit:menu:read']]
         ],
-        "post"
+        "post"=>[
+            'denormalization_context' => ['groups' => ["menu:entrer"]]
+        ]
      ],
-     itemOperations:["put","get"]
+     itemOperations:["put","get","delete"]
 )]
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu extends Produit
 {
+    // #[Groups(["menu:entrer"])]
     #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'menus')]
     private $burgers;
 
+    // #[Groups(["produit:write:burger"])]
     #[ORM\ManyToMany(targetEntity: Frites::class, inversedBy: 'menus')]
     private $portionDeFrites;
 
@@ -145,7 +155,8 @@ class Menu extends Produit
         $totalBurger=$menuCommande->prixTotalBurger($menuCommande);
         $totalFrite=$menuCommande->prixTotalFrite($menuCommande);
         $totalBoisson=$menuCommande->prixTotalBoisson($menuCommande);
-        return $totalBurger+$totalBoisson+$totalFrite;
+         $reduction=($totalBurger+$totalBoisson+$totalFrite)*0.5;
+        return  $reduction ;
     }
     
 }

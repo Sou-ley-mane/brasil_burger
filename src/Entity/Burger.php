@@ -13,20 +13,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 #[ApiResource(
     attributes:[
         // Securuté globale dans une ressource 
-        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
-        // "security_message"=>"Vous n'avez pas access à cette Ressource",
+        "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
 
     itemOperations:["put","get" =>[],"delete"
 ],
     collectionOperations:[
         "post"=>[
-        
+             
             'denormalization_context' => ['groups' => ["produit:write:burger"]]
         ],
         "get"=>[
             'normalization_context' => ['groups' => ['produit:read:burger']],],
-       
+        
             ]
         
 )]

@@ -9,15 +9,21 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
+    attributes:[
+        // Securuté globale dans une ressource 
+        "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
     collectionOperations:[
+        
         "get"=>[
             'normalization_context' => ['groups' => ['personne:read:client']]
     ]
     ,"post"],
     itemOperations:["put","get","delete"=>[
-        //Securité d'une opération
-        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
-        "security"=>"Votre profile ne vous permet pas d'effectuer une suppression"
+        // //Securité d'une opération
+        // "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        // "security"=>"Votre profile ne vous permet pas d'effectuer une suppression"
     ]]
 )]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]

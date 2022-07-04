@@ -7,59 +7,59 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\Boisson;
+use App\Entity\Commande;
 use App\Entity\Frites;
+use DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
-class ProduitDataPersister  implements DataPersisterInterface 
+class CommandeDataPersister   implements DataPersisterInterface 
 {
 
 // //Declaration des variables 
 
 private ?TokenInterface $token;
 private EntityManagerInterface  $em ;
-private int $a;
+
+
+
+
 
 
 public function __construct(TokenStorageInterface $token,EntityManagerInterface $em)
 {
     $this->token = $token->getToken();
-    $this->em = $em;   
+    $this->em = $em; 
+      
 } 
 // // Verification de la prise en  charge des données
 public function supports($data): bool
 { 
-return $data instanceof Produit;
+return $data instanceof Commande;
 }
 // **************************
 
 public function persist($data)
 {
- 
-//Calculer le prix du menu
-if ($data instanceof Menu) {
-  
-  $burgers=$data->getBurgers();
-  $boisson=$data->getBoissons();
-  $portionFrite=$data->getPortionDeFrites();
 
-  if (count($burgers)==0) {
-    dd("burger Obligatoire");  
-  
-  }elseif(count($boisson)==0 && count($portionFrite)==0){
-
-    dd("Complement Obligatoire");  
-
-  }
-    $prixDuMenu=$data->prixMenu($data);
-    $data->setPrix($prixDuMenu);
-}
-
-$data->setGestionnaire($this->token->getUser()); 
+    // $client=$this->token->getUser();
+    // $data->setClient($client);
+    $paiement=0;
+    $produitsCommandes=$data->getProduits();
+    // dd($produitsCommandes);
+    foreach ($produitsCommandes as $produit) {
+       $paiement+=$produit-> getPrix();
+    }
+    // dd($paiement);
+    // $data->setDateCmd();
+$data->  setPaiement($paiement);   
+$data-> setNumCmd("CMD00".date("his"));
+$data->setClient($this->token->getUser()); 
 $this->em->persist($data);
 $this->em->flush();
+
 }
 
 
@@ -67,8 +67,6 @@ $this->em->flush();
 public function remove($data)
 {
   if ($data instanceof Menu) {
-  
-   
     $data->setEtatProduit("false");
   }
   else if ($data instanceof Burger || $data instanceof Boisson || $data instanceof Frites) {

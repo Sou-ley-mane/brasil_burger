@@ -7,9 +7,32 @@ use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    itemOperations:["put"=>[
+          // Securuté globale dans une ressource 
+          "security" => "is_granted('ROLE_GESTIONNAIRE')",
+          "security_message"=>"Vous n'avez pas access à cette Ressource",
+    
+    ],"get" =>[],"delete"
+],
+    collectionOperations:[
+        "post"=>[
+        
+            'denormalization_context' => ['groups' => ["commande:write"]]
+        ],
+        "get"=>[
+            'normalization_context' => ['groups' => ['produit:read:burger']],],
+       
+        ]
+      
+        
+      
+)
+
+]
 
 class Commande
 {
@@ -24,15 +47,17 @@ class Commande
     #[ORM\Column(type: 'string')]
     private $numCmd;
 
+    #[Groups(["commande:write"])]
     #[ORM\Column(type: 'datetime')]
     private $dateCmd;
 
+    #[Groups(["commande:write"])]
     #[ORM\Column(type: 'string', length: 255)]
     private $etatPaiement;
 
     #[ORM\Column(type: 'integer')]
     private $paiement;
-
+    #[Groups(["commande:write"])]
     #[ORM\Column(type: 'string', length: 100)]
     private $telLivraison;
 
@@ -49,13 +74,14 @@ class Commande
 
     // #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class)]
     // private $ligneDeCmd;
-
+    #[Groups(["commande:write"])]
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
     private $zone;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'commandes')]
     private $gestionnaire;
 
+    #[Groups(["commande:write"])]
     #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'commandes')]
     private $produits;
 
@@ -86,12 +112,12 @@ class Commande
         return $this;
     }
 
-    public function getNumCmd(): ?int
-    {
-        return $this->numCmd;
-    }
+    // public function getNumCmd(): ?int
+    // {
+    //     return $this->numCmd;
+    // }
 
-    public function setNumCmd(int $numCmd): self
+    public function setNumCmd(string $numCmd): self
     {
         $this->numCmd = $numCmd;
 

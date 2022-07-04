@@ -8,6 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 //  #[ApiResource]
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -45,6 +47,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     // private $id;
     #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\Email(message:"Votre Email '{{ value }}' est non valide.")]
     private $email;
 
     #[ORM\Column(type: 'json')]
