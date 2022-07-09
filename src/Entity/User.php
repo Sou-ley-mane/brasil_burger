@@ -45,7 +45,15 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     // #[ORM\GeneratedValue]
     // #[ORM\Column(type: 'integer')]
     // private $id;
-    #[Groups(['personne:read:client','personne:livreur:read'])]
+    // #[Groups(['personne:read:client','personne:livreur:read'])]
+    #[Groups([
+        'personne:gestionnaire:write',
+        "personne:gestionnaire:read",
+        'personne:client:write',
+        'personne:client:read',
+        'personne:livreur:write',
+        'personne:livreur:read'
+        ])]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\Email(message:"Votre Email '{{ value }}' est non valide.")]
     private $email;
@@ -58,10 +66,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
 
    
 
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
+ 
 
     public function getEmail(): ?string
     {
@@ -92,7 +97,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_VISITEUR';
 
         return array_unique($roles);
     }

@@ -9,8 +9,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 #[ApiResource(
-    collectionOperations:["get","post"],
-    itemOperations:["put","get"]
+    collectionOperations:["get"=>[
+        'normalization_context' => ['groups' => ["personne:gestionnaire:read"]]
+
+    ]
+    ,"post"=>[
+        'denormalization_context' => ['groups' => ["personne:gestionnaire:write"]]
+
+    ]],
+    itemOperations:["put","get","delete"]
 )]
 #[ORM\Entity(repositoryClass: GestionnaireRepository::class)]
 class Gestionnaire extends User

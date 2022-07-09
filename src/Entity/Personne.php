@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\DiscriminatorMap(["user"=>"User"])]
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
-#[ApiResource]
+// #[ApiResource]
  class Personne
 {
     #[ORM\Id]
@@ -21,15 +21,34 @@ use Symfony\Component\Serializer\Annotation\Groups;
     #[ORM\Column(type: 'integer')]
     // #[Groups(['burger:read:simple','burger:write:simple'])]
     private $id;
-
-    #[Groups(['personne:read:client','personne:livreur:read'])]
+    #[Groups([
+        'personne:gestionnaire:write',
+        "personne:gestionnaire:read",
+        'personne:client:write',
+        'personne:client:read',
+        'personne:livreur:write',
+        'personne:livreur:read'
+        ])]
+    // #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $prenom;
-
-    #[Groups(['personne:read:client','personne:livreur:read'])]
+    
+    // #[Groups(['personne:read:client','personne:livreur:read'])]
+    #[Groups([
+        'personne:gestionnaire:write',
+        "personne:gestionnaire:read",
+        'personne:client:write',
+        'personne:client:read',
+        'personne:livreur:write',
+        'personne:livreur:read'
+    
+    ])]
     #[ORM\Column(type: 'string', length: 200)]
     private $nom;
 
+    // #[Groups([
+    //     "personne:gestionnaire:read"
+    // ])]
     #[ORM\Column(type: 'string',nullable:true, length: 200)]
     private $etat;
 

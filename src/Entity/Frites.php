@@ -15,42 +15,56 @@ use Doctrine\Common\Collections\ArrayCollection;
         "security" => "is_granted('ROLE_GESTIONNAIRE')",
         "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
-    collectionOperations:["get","post"],
+    collectionOperations:["get","post"=>[
+    'denormalization_context' => ['groups' => ["produit:write:frite"]]
+
+    ]],
     itemOperations:["put","get"]
 )]
 class Frites extends Produit{
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'portionDeFrites')]
-    private $menus;
+  
+
+    #[ORM\OneToMany(mappedBy: 'frite', targetEntity: MenuPortionFrite::class)]
+    private $menuPortionFrites;
 
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
+        $this->menuPortionFrites = new ArrayCollection();
     }
 
     /**
-     * @return Collection<int, Menu>
+     * @return Collection<int, MenuPortionFrite>
      */
-    public function getMenus(): Collection
+    public function getMenuPortionFrites(): Collection
     {
-        return $this->menus;
+        return $this->menuPortionFrites;
     }
 
-    public function addMenu(Menu $menu): self
+    public function addMenuPortionFrite(MenuPortionFrite $menuPortionFrite): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addPortionDeFrite($this);
+        if (!$this->menuPortionFrites->contains($menuPortionFrite)) {
+            $this->menuPortionFrites[] = $menuPortionFrite;
+            $menuPortionFrite->setFrite($this);
         }
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
+    public function removeMenuPortionFrite(MenuPortionFrite $menuPortionFrite): self
     {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removePortionDeFrite($this);
+        if ($this->menuPortionFrites->removeElement($menuPortionFrite)) {
+            // set the owning side to null (unless already changed)
+            if ($menuPortionFrite->getFrite() === $this) {
+                $menuPortionFrite->setFrite(null);
+            }
         }
 
         return $this;
     }
+
+ 
+
+  
+
+   
 }

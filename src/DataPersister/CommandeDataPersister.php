@@ -9,6 +9,7 @@ use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\Boisson;
 use App\Entity\Commande;
 use App\Entity\Frites;
+use App\ServiceMailler\MaillerService;
 use DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -22,16 +23,14 @@ class CommandeDataPersister   implements DataPersisterInterface
 
 private ?TokenInterface $token;
 private EntityManagerInterface  $em ;
+private MaillerService $email;
 
 
-
-
-
-
-public function __construct(TokenStorageInterface $token,EntityManagerInterface $em)
+public function __construct(TokenStorageInterface $token,EntityManagerInterface $em,MaillerService $email)
 {
     $this->token = $token->getToken();
     $this->em = $em; 
+    $this->email=$email;
       
 } 
 // // Verification de la prise en  charge des données
@@ -42,46 +41,45 @@ return $data instanceof Commande;
 // **************************
 
 public function persist($data)
-{
+{ 
+  // dd();
+$ligneCommande=$data->getLigneCommandes();
+// dd($ligneCommande);
+foreach ($ligneCommande as $produit) {
+  $produit->getQuantite();
+  $produit->getProduit()->getPrix()*$produit->getQuantite();
+  // dd( $produit->getProduit()->getPrix()*$produit->getQuantite());
+  $produit->setPrix($produit->getProduit()->getPrix()*$produit->getQuantite());
+}
 
-    // $client=$this->token->getUser();
-    // $data->setClient($client);
-    $paiement=0;
-    $produitsCommandes=$data->getProduits();
-    // dd($produitsCommandes);
-    foreach ($produitsCommandes as $produit) {
-       $paiement+=$produit-> getPrix();
-    }
-    // dd($paiement);
-    // $data->setDateCmd();
-$data->  setPaiement($paiement);   
 $data-> setNumCmd("CMD00".date("his"));
 $data->setClient($this->token->getUser()); 
 $this->em->persist($data);
 $this->em->flush();
+// $this->email->sendEmail($this->token->getUser()->getEmail(),$this->token->getUser()->getPrenom()  );
 
 }
 
 
 // //Suppression des données
-public function remove($data)
+public function remove($data)                                       
 {
-  if ($data instanceof Menu) {
+  if ($data instanceof Menu) { 
     $data->setEtatProduit("false");
   }
   else if ($data instanceof Burger || $data instanceof Boisson || $data instanceof Frites) {
-    $lesMenus=$data->getMenus();
+    // $lesMenus=$data->getMenus();      
     // dd($lesMenus);
-    $result= count($lesMenus) ;
-  if ($result==0) {
-    $data->setEtatProduit("false");
-      $this->em->persist($data);
-  }else {
-    echo('Ce produit se trouve dans menu');
-    echo("   .  ");
-    echo('Pour pouvoir le supprimer merci de le retiré dans le menu');
-    dd();
-  }
+    // $result= count($lesMenus) ;
+  // if ($result==0) {
+  //   $data->setEtatProduit("false");
+  //     $this->em->persist($data);
+  // }else {
+  //   echo('Ce produit se trouve dans menu');
+  //   echo("   .  ");
+  //   echo('Pour pouvoir le supprimer merci de le retiré dans le menu');
+  //   dd();
+  // }
 }
 $this->em  ->flush();
 }

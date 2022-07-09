@@ -7,9 +7,22 @@ use App\Repository\LivraisonRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    attributes:[
+        // Securuté globale dans une ressource 
+        //  
+    ],
+    collectionOperations:["get"=>[
+        'normalization_context' => ['groups' => ['livraison:lecture']]
+    ],"post"=>[
+        'denormalization_context' => ['groups' => ['livraison:ecriture']]
+
+    ]],
+    itemOperations:["put","get"]
+)]
 class Livraison
 {
     #[ORM\Id]
@@ -21,12 +34,16 @@ class Livraison
     #[ORM\Column(type: 'string', length: 255)]
     private $etatLivraison;
 
+    #[Groups(['livraison:lecture','livraison:ecriture'])]
     #[ORM\ManyToOne(targetEntity: Livreur::class, inversedBy: 'livraisons')]
     private $livreur;
 
+    #[Groups(['livraison:lecture','livraison:ecriture','commande:read'])]
+    // #[Groups([])]
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
     private $commandes;
 
+    #[Groups(['livraison:lecture','livraison:ecriture'])]
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'livraisons')]
     private $zone;
 

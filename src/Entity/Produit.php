@@ -26,7 +26,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ApiResource(
 
-)]
+    collectionOperations:[
+        "get"=>[
+            'normalization_context' => ['groups' => ["produit:read"]],],
+           
+            ]
+    )]
+
 
 class Produit
 {
@@ -34,27 +40,39 @@ class Produit
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     // #[Groups(["produit:write:burger"])]
+    // #[Groups([
+    //     // "produit:write:menu"
+    //     // 'produit:read:burger',
+    
+    //     ]
+    //     )]
+   
     protected $id;
 
-    #[Groups([
-    'produit:read:burger',
-    'produit:menu:read',
-    "produit:write:burger"
-    ]
-    )]
+ 
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
+    #[Groups([
+        "produit:write:burger",
+        "produit:write:boisson",
+        "produit:write:frite"])]
+    // #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
     protected $nomProduit;
 
    
-    #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
+    // #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
+    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite"])]
+    // #[Groups([""])]
     #[ORM\Column(type: 'string', length: 255)]
     protected $image;
 
     // #[Groups(['produit:menu:read'])]
-    #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
-    #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
+    // #[Groups(['produit:read:burger',
+    // 'produit:menu:read',
+    // "produit:write:burger"])]
+    // #[Groups(["menu:entrer"])]
+    // #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
+    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite"])]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
@@ -65,13 +83,18 @@ class Produit
     // #[Groups(['produit:read:burger'])]
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
     private $gestionnaire;
-    // #[Groups(['produit:read:burger'])]
-    #[ORM\ManyToMany(targetEntity: Commande::class, inversedBy: 'produits')]
-    private $commandes;
+    // #[ORM\ManyToMany(targetEntity: Commande::class, inversedBy: 'produits')]
+    // private $commandes;
+    
+    // #[Groups(['produit:menu:read'])]
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
+    private $ligneCommandes;
 
+    
     public function __construct()
     {
-        $this->commandes = new ArrayCollection();
+        
+        $this->ligneCommandes = new ArrayCollection();
     }
 
   
@@ -152,23 +175,55 @@ class Produit
     //     return $this->commandes;
     // }
 
-    public function addCommande(Commande $commande): self
+    // public function addCommande(Commande $commande): self
+    // {
+    //     if (!$this->commandes->contains($commande)) {
+    //         $this->commandes[] = $commande;
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeCommande(Commande $commande): self
+    // {
+    //     $this->commandes->removeElement($commande);
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection<int, LigneCommande>
+     */
+    public function getLigneCommandes(): Collection
     {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
+        return $this->ligneCommandes;
+    }
+
+    public function addLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes[] = $ligneCommande;
+            $ligneCommande->setProduit($this);
         }
 
         return $this;
     }
 
-    public function removeCommande(Commande $commande): self
+    public function removeLigneCommande(LigneCommande $ligneCommande): self
     {
-        $this->commandes->removeElement($commande);
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getProduit() === $this) {
+                $ligneCommande->setProduit(null);
+            }
+        }
 
         return $this;
     }
 
+
+
     
-   
+
  
 }

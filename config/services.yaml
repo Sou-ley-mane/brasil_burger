@@ -21,9 +21,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\EventSubscriber\ProduitSubscriber:
-        tags:
-            - { name: doctrine.event_listener, event: prePersist}
+    # App\EventSubscriber\ProduitSubscriber:
+    #     tags:
+    #         - { name: doctrine.event_listener, event: prePersist}
 
     # App\DataProvider\catalogProvider:
     #     tags: 

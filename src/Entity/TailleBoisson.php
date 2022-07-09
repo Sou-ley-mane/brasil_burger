@@ -24,9 +24,13 @@ class TailleBoisson
     #[ORM\ManyToMany(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     private $boissons;
 
+    #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: MenuTailleBoisson::class)]
+    private $menuTailleBoissons;
+
     public function __construct()
     {
         $this->boissons = new ArrayCollection();
+        $this->menuTailleBoissons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,6 +70,36 @@ class TailleBoisson
     public function removeBoisson(Boisson $boisson): self
     {
         $this->boissons->removeElement($boisson);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuTailleBoisson>
+     */
+    public function getMenuTailleBoissons(): Collection
+    {
+        return $this->menuTailleBoissons;
+    }
+
+    public function addMenuTailleBoisson(MenuTailleBoisson $menuTailleBoisson): self
+    {
+        if (!$this->menuTailleBoissons->contains($menuTailleBoisson)) {
+            $this->menuTailleBoissons[] = $menuTailleBoisson;
+            $menuTailleBoisson->setTailleBoisson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuTailleBoisson(MenuTailleBoisson $menuTailleBoisson): self
+    {
+        if ($this->menuTailleBoissons->removeElement($menuTailleBoisson)) {
+            // set the owning side to null (unless already changed)
+            if ($menuTailleBoisson->getTailleBoisson() === $this) {
+                $menuTailleBoisson->setTailleBoisson(null);
+            }
+        }
 
         return $this;
     }

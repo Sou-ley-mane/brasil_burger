@@ -11,15 +11,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     attributes:[
         // Securuté globale dans une ressource 
-        "security" => "is_granted('ROLE_GESTIONNAIRE')",
-        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        // "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
     collectionOperations:[
         
         "get"=>[
-            'normalization_context' => ['groups' => ['personne:read:client']]
+            'normalization_context' => ['groups' => ['personne:client:read']]
     ]
-    ,"post"],
+    ,"post"=>[
+        'denormalization_context' => ['groups' => ['personne:client:write']]
+
+    ]
+],
     itemOperations:["put","get","delete"=>[
         // //Securité d'une opération
         // "security"=>"is_granted('ROLE_GESTIONNAIRE')",
@@ -30,11 +34,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Client extends User
 { 
    
-    #[Groups(['personne:read:client'])]
+    #[Groups([
+        'personne:client:write',
+        'personne:client:read']
+        )]
     #[ORM\Column(type: 'string', length: 255)]
     private $adresse;
     
-    #[Groups(['personne:read:client'])]
+    #[Groups([
+        'personne:client:write',
+        'personne:client:read'
+        ])]
     #[ORM\Column(type: 'string', length: 100)]
     private $telephone;
 

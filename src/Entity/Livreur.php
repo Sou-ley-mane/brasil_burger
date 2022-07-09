@@ -13,27 +13,36 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     attributes:[
         // Securuté globale dans une ressource 
-        "security" => "is_granted('ROLE_GESTIONNAIRE')",
-        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        //  
     ],
-    collectionOperations:["get"=>[
+    collectionOperations:[
+        "get"=>[
         'normalization_context' => ['groups' => ['personne:livreur:read']]
-    ],"post"],
+    ],"post"=>[
+        'denormalization_context' => ['groups' => ['personne:livreur:write']]
+
+
+    ]
+],
     itemOperations:["put","get"]
 )]
 class Livreur extends User
 {
    
-    #[Groups(['personne:livreur:read'])]
+    #[Groups([
+        'personne:livreur:read',
+        ])]
     #[ORM\Column(type: 'string', length: 255)]
     private $matricule;
 
-    #[Groups(['personne:livreur:read'])]
+    #[Groups([
+        'personne:livreur:read',
+        'personne:livreur:write']
+        )]
     #[ORM\Column(type: 'string', length: 255)]
     private $telephoneLivreur;
 
   
-
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
     private $livraisons;
 
@@ -45,9 +54,6 @@ class Livreur extends User
         $this->livraisons = new ArrayCollection();
     }
 
-  
-
- 
 
     public function getMatricule(): ?string
     {

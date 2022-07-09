@@ -13,57 +13,75 @@ use ApiPlatform\Core\Annotation\ApiResource;
 #[ApiResource(
     attributes:[
         // Securuté globale dans une ressource 
-        "security" => "is_granted('ROLE_GESTIONNAIRE')",
-        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        // "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
 
     itemOperations:["put","get" =>[],"delete"
 ],
     collectionOperations:[
         "post"=>[
-             
+         // 'denormalization_context' => ['groups' => ["produit:write"]]
             'denormalization_context' => ['groups' => ["produit:write:burger"]]
         ],
         "get"=>[
             'normalization_context' => ['groups' => ['produit:read:burger']],],
-        
+           
+
+       
             ]
-        
-)]
+    )]
 class Burger extends Produit
 {
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'burgers')]
-    private $menus;
+ 
+
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
+    private $menuBurgers;
 
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
+        $this->menuBurgers = new ArrayCollection();
     }
 
     /**
-     * @return Collection<int, Menu>
+     * @return Collection<int, MenuBurger>
      */
-    public function getMenus(): Collection
+    public function getMenuBurgers(): Collection
     {
-        return $this->menus;
+        return $this->menuBurgers;
     }
 
-    public function addMenu(Menu $menu): self
+    public function addMenuBurger(MenuBurger $menuBurger): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addBurger($this);
+        if (!$this->menuBurgers->contains($menuBurger)) {
+            $this->menuBurgers[] = $menuBurger;
+            $menuBurger->setBurger($this);
         }
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
+    public function removeMenuBurger(MenuBurger $menuBurger): self
     {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeBurger($this);
+        if ($this->menuBurgers->removeElement($menuBurger)) {
+            // set the owning side to null (unless already changed)
+            if ($menuBurger->getBurger() === $this) {
+                $menuBurger->setBurger(null);
+            }
         }
 
         return $this;
     }
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
 }
