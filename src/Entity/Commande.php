@@ -51,7 +51,7 @@ class Commande
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $etatCmd = "false";
+    private $etatCmd = "commande";
 
     #[ORM\Column(type: 'string')]
     private $numCmd;

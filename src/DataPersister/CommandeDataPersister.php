@@ -42,14 +42,16 @@ return $data instanceof Commande;
 
 public function persist($data)
 { 
-  // dd();
+  
+  // Recupération du tableau de commande
 $ligneCommande=$data->getLigneCommandes();
-// dd($ligneCommande);
-foreach ($ligneCommande as $produit) {
-  $produit->getQuantite();
-  $produit->getProduit()->getPrix()*$produit->getQuantite();
-  // dd( $produit->getProduit()->getPrix()*$produit->getQuantite());
-  $produit->setPrix($produit->getProduit()->getPrix()*$produit->getQuantite());
+
+foreach ($ligneCommande as $ligneCmd) {
+  //la quante dans une ligne de c ommande
+  $ligneCmd->getQuantite();
+  $ligneCmd->getProduit()->getPrix()*$ligneCmd->getQuantite();
+  //prix d'une ligne de commande
+  $ligneCmd->setPrix($ligneCmd->getProduit()->getPrix()*$ligneCmd->getQuantite());
 }
 
 $data-> setNumCmd("CMD00".date("his"));

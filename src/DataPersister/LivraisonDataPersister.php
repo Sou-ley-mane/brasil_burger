@@ -19,12 +19,14 @@ class LivraisonDataPersister  implements DataPersisterInterface
  
 
 private EntityManagerInterface $entityManager;
+private ?TokenInterface $token;
 
-    public function __construct(EntityManagerInterface $entityManager,LivreurRepository $livreur)
+    public function __construct(EntityManagerInterface $entityManager,LivreurRepository $livreur,TokenStorageInterface $token)
 {
 $this->entityManager = $entityManager;
 $this->livreur = $livreur;
-}                            
+$this->token = $token->getToken();
+}                        
 
 // Verification de la prise en  charge des données
 public function supports($data): bool
@@ -56,10 +58,14 @@ public function persist($data){
         //     $result="le livreur . .n'est pas disponible";
         //     return new JsonResponse($result ,400);
         //         }
+        
+        //le livreur pour livrer la commande
         $data->setLivreur($livreurCommande);
         $data->setEtatLivraison("false");
         $this->entityManager->persist($data);
         $commande->setEtatCmd("cours");
+        //LE gestionnaire qui a gérer la livraison
+        $commande->setGestionnaire($this->token ->getUser());
         $this->entityManager->persist($commande);  
         $livreurCommande->setEtat("indisponible");   
         $this-> entityManager->persist($livreurCommande);

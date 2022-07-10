@@ -191,13 +191,13 @@ class Produit
     //     return $this;
     // }
 
-    /**
-     * @return Collection<int, LigneCommande>
-     */
-    public function getLigneCommandes(): Collection
-    {
-        return $this->ligneCommandes;
-    }
+    // /**
+    //  * @return Collection<int, LigneCommande>
+    //  */
+    // public function getLigneCommandes(): Collection
+    // {
+    //     return $this->ligneCommandes;
+    // }
 
     public function addLigneCommande(LigneCommande $ligneCommande): self
     {

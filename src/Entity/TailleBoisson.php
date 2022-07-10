@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Entity(repositoryClass: TailleBoissonRepository::class)]
 #[ApiResource]
 
-class TailleBoisson
+class TailleBoisson 
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

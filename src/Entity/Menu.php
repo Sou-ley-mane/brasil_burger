@@ -79,40 +79,47 @@ class Menu extends Produit
     }
 
  
-
-
-  
-
-  
-
-
- 
+    public function prixTotalFrite($menu){
+        $prix=0;
+        $portionDeFrite=$menu->getMenuPortionFrites();
+        foreach ($portionDeFrite as $frite) {
+            $quantiteFrite=$frite->getQuantite();
+            $prixFrite=$frite->getFrite()->getPrix();
+            $prix+=$prixFrite* $quantiteFrite;
+        }
+        return $prix;
+    }
 
     public function prixTotalBurger($menu){
         $prix=0;
-        $burgers=$menu->getBurgers();
-        foreach ($burgers as $burger) {
-            $prix+=$burger->getPrix();
+        $menuBurger=$menu->getMenuBurgers();
+        foreach ($menuBurger as $burger) {
+            $prixBurger=$burger->getBurger()->getPrix();
+            $quantiteDansLeMenu=$burger->getQuantite();
+            $prix+=$prixBurger*$quantiteDansLeMenu;
         }
         return $prix;
     }
 
 
-    public function prixTotalFrite($menu){
-        $prix=0;
-        $portionDeFrite=$menu->getPortionDeFrites();
-        foreach ($portionDeFrite as $frite) {
-            $prix+=$frite->getPrix();
-        }
-        return $prix;
-    }
 
     public function prixTotalBoisson($menu){
         $prix=0;
-        $boissons=$menu->getBoissons();
-        foreach ( $boissons as  $boisson) {
-            $prix+= $boisson->getPrix();
+        $boissons=$menu->getMenuTailleBoissons();
+        foreach ( $boissons as  $tailleBoisson) {
+            //Quantité
+          $nombreDeBoisson=$tailleBoisson-> getQuantite();
+          $tailleBoisson=$tailleBoisson->getTailleBoisson();
+           //la boisson concerner
+         $typeDeBoissons= $tailleBoisson->getBoissons();
+          foreach ($typeDeBoissons as $typeBoisson) {
+            //Prix de la Boisson concernée 
+            $prixDuBoisson=$typeBoisson->getPrix();
+            $prix+=$prixDuBoisson*$nombreDeBoisson;
+          }
+           
         }
+       
         return $prix;
     }
 
