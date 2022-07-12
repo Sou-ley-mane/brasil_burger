@@ -66,23 +66,9 @@ $this->em->flush();
 // //Suppression des données
 public function remove($data)                                       
 {
-  if ($data instanceof Menu) { 
-    $data->setEtatProduit("false");
-  }
-  else if ($data instanceof Burger || $data instanceof Boisson || $data instanceof Frites) {
-    // $lesMenus=$data->getMenus();      
-    // dd($lesMenus);
-    // $result= count($lesMenus) ;
-  // if ($result==0) {
-  //   $data->setEtatProduit("false");
-  //     $this->em->persist($data);
-  // }else {
-  //   echo('Ce produit se trouve dans menu');
-  //   echo("   .  ");
-  //   echo('Pour pouvoir le supprimer merci de le retiré dans le menu');
-  //   dd();
-  // }
-}
+
+ dd( $data->getLivraison());
+
 $this->em  ->flush();
 }
 

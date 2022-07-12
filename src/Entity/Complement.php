@@ -12,6 +12,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
     "catalogue"=> [
         'method'=> 'GET',
         'path'=>"/complement",
+        'normalization_context' => ['groups' => ['produit:complement:read']],
+
         ] ,
     ],
     itemOperations:[])]

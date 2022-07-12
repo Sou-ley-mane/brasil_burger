@@ -53,12 +53,13 @@ class Commande
     #[ORM\Column(type: 'string', length: 255)]
     private $etatCmd = "commande";
 
+    #[Groups(['commande:read'])]
     #[ORM\Column(type: 'string')]
     private $numCmd;
 
     // #[Groups(["commande:write"])]
-    // #[Groups(["commande:write"])]
 
+    #[Groups(['commande:read'])]
     #[ORM\Column(type: 'datetime')]
     private $dateCmd;
 
@@ -73,7 +74,8 @@ class Commande
     private $telLivraison; 
 
 
-    // #[ApiSubresource] 
+    // #[ApiSubresource]
+    #[Groups(['commande:read'])]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
     private $client;
 
@@ -95,6 +97,8 @@ class Commande
     // #[Groups(["commande:write"])]
     // #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'commandes')]
     // private $produits;
+
+    // #[Groups(['commande:read'])]
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade: ["persist"])]
     #[Groups(["commande:write","commande:read"])]
     #[SerializedName("Produits")]

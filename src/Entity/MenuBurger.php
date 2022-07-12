@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: MenuBurgerRepository::class)]
 class MenuBurger
 {
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -18,7 +19,7 @@ class MenuBurger
     #[ORM\Column(type: 'integer')]
     private $quantite;
     
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
     private $burger;
 

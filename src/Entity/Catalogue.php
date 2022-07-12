@@ -12,6 +12,8 @@ use Attribute;
 
         'method'=> 'GET',
         "path"=>"/catalogue",
+        'normalization_context' => ['groups' => ['produit:catalogue:read']],
+
 
         ] ,
     ],

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+// use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
@@ -16,7 +17,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
         // "security" => "is_granted('ROLE_GESTIONNAIRE')",
         // "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
-    collectionOperations:["get","post"=>[
+    collectionOperations:["get"=>[
+        'normalization_context' => ['groups' => ["produit:read:boisson"]]
+
+    ]
+    ,"post"=>[
         'denormalization_context' => ['groups' => ["produit:write:boisson"]]
     ]],
     itemOperations:["put","get","delete"]
@@ -25,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Boisson extends Produit
 {
     
-  #[Groups(["produit:write:boisson"])]
+  #[Groups(["produit:write:boisson","produit:read:boisson"])]
     #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'boissons',cascade:["persist"])]
     private $tailleBoissons;
 

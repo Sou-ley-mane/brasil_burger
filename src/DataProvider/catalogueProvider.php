@@ -27,13 +27,14 @@ public function supports(string $resourceClass, string $operationName = null, ar
 
 public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
 {
-    // dd($this->menuRepository->findAll());
- return   $context=[
-    $this->menuRepository->findAll(),
-    $this->burgerRepo->findAll()
-];
-}
 
-    
+    $context["burger"]= $this->burgerRepo->findAll();
+    $context["menu"]=$this->menuRepository->findAll();
+    return   $context;
+   
+
+} 
+
+
 }
 

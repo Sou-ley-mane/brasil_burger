@@ -10,9 +10,10 @@ use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 // use Symfony\Component\Validator\Validator\ValidatorInterface;
-// use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name:"type",type:"string")]
@@ -28,7 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
     collectionOperations:[
         "get"=>[
-            'normalization_context' => ['groups' => ["produit:read"]],],
+            // 'normalization_context' => ['groups' => ["produit:read"]],
+        ],
            
             ]
     )]
@@ -39,40 +41,29 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    // #[Groups(["produit:write:burger"])]
-    // #[Groups([
-    //     // "produit:write:menu"
-    //     // 'produit:read:burger',
-    
-    //     ]
-    //     )]
-   
     protected $id;
 
  
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups([
-        "produit:write:burger",
-        "produit:write:boisson",
-        "produit:write:frite"])]
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
+    
     // #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
     protected $nomProduit;
 
    
-    // #[Groups(['produit:read:burger','produit:menu:read',"produit:write:burger"])]
-    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite"])]
-    // #[Groups([""])]
-    #[ORM\Column(type: 'string', length: 255)]
+    
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
+    #[ORM\Column(type: 'string')]
     protected $image;
-
-    // #[Groups(['produit:menu:read'])]
-    // #[Groups(['produit:read:burger',
-    // 'produit:menu:read',
-    // "produit:write:burger"])]
-    // #[Groups(["menu:entrer"])]
+    
+    
+    // #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
+    // #[SerializedName("image")]
+    // protected $bImage;
+    
     // #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
-    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite"])]
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
@@ -80,13 +71,12 @@ class Produit
     #[ORM\Column(type: 'string', length: 255)]
     protected $etatProduit="true";
 
-    // #[Groups(['produit:read:burger'])]
+    
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
     private $gestionnaire;
-    // #[ORM\ManyToMany(targetEntity: Commande::class, inversedBy: 'produits')]
-    // private $commandes;
+   
     
-    // #[Groups(['produit:menu:read'])]
+   
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
     private $ligneCommandes;
 
@@ -106,6 +96,8 @@ class Produit
         return $this->id;
     }
 
+  
+
     public function getNomProduit(): ?string
     {
         return $this->nomProduit;
@@ -117,7 +109,19 @@ class Produit
 
         return $this;
     }
+    // ******************************************************
+    // public function getBImage(): ?string
+    // {
+    //     return $this->bImage;
+    // }
 
+    // public function setBImage(string $bImage): self
+    // {
+    //     $this->image = $bImage;
+
+    //     return $this;
+    // }
+    // ***************************************************
 
     public function getImage(): ?string
     {
@@ -222,8 +226,9 @@ class Produit
     }
 
 
+}
+
 
     
 
  
-}

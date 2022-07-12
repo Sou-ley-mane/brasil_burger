@@ -5,8 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BurgerRepository;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
     
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
@@ -25,7 +26,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
             'denormalization_context' => ['groups' => ["produit:write:burger"]]
         ],
         "get"=>[
-            'normalization_context' => ['groups' => ['produit:read:burger']],],
+            'normalization_context' => ['groups' => ['produit:read:burger']],
+        ],
            
 
        
@@ -34,7 +36,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 class Burger extends Produit
 {
  
-
+    // #[Groups(['produit:read:burger'])]
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
     private $menuBurgers;
 
@@ -44,6 +46,7 @@ class Burger extends Produit
     }
 
     /**
+   
      * @return Collection<int, MenuBurger>
      */
     public function getMenuBurgers(): Collection

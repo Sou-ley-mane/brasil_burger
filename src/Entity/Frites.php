@@ -15,11 +15,15 @@ use Doctrine\Common\Collections\ArrayCollection;
         "security" => "is_granted('ROLE_GESTIONNAIRE')",
         "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
-    collectionOperations:["get","post"=>[
+    collectionOperations:["get"=>[
+    'normalization_context' => ['groups' => ["produit:read:frite"]]
+
+    ]
+    ,"post"=>[
     'denormalization_context' => ['groups' => ["produit:write:frite"]]
 
     ]],
-    itemOperations:["put","get"]
+    itemOperations:["put","get","delete"]
 )]
 class Frites extends Produit{
   

@@ -43,28 +43,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Menu extends Produit
 {
   
-  
 
- 
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     protected $nomProduit;
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     protected $image;
 
-    #[Groups(["produit:write:menu"])]
-    protected $prix;
+    // // #[Groups(["produit:write:menu"])]
+    // protected $prix;
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:["persist"])]
     private $menuBurgers;
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     #[ORM\OneToMany(mappedBy: 'menus', targetEntity: MenuPortionFrite::class,cascade:["persist"])]
     private $menuPortionFrites;
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTailleBoisson::class,cascade:["persist"])]
     private $menuTailleBoissons;
 

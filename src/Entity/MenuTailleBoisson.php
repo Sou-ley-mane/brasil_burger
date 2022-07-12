@@ -23,7 +23,7 @@ class MenuTailleBoisson
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailleBoissons')]
     private $menu;
     
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read'])]
     #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'menuTailleBoissons')]
     private $tailleBoisson;
 

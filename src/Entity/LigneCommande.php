@@ -17,16 +17,16 @@ class LigneCommande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["commande:write"])]
+    // #[Groups(["commande:write"])]
 
     private $id;
 
     // #[Groups(["commande:write"])]
-    #[Groups(["commande:write"])]
+    #[Groups(["commande:write",'commande:read'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $quantite;
     
-    #[Groups(["commande:write"])]
+    #[Groups(["commande:write",'commande:read'])]
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
     private $produit;
 
