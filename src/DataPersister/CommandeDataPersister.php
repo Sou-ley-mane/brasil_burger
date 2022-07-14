@@ -48,26 +48,30 @@ return $data instanceof Commande;
 
 public function persist($data)
 { 
-  
   $count=0;
   $nombreLigneCommande=count($data->getLigneCommandes());
-foreach ($data->getLigneCommandes() as $ligneCmd) {
+  foreach ($data->getLigneCommandes() as $ligneCmd) {
+  // dd("azerty"); 
 
-// if ($ligneCmd->getProduit() instanceof Menu) {
-// dd("okkkk");
-// }
+if ($ligneCmd->getProduit() instanceof Menu) {
+  foreach ($ligneCmd->getProduit()->getMenuTailleBoissons() as $taille) {
+    foreach ($taille->getTailleBoisson()->getBoissons() as $boiss) {
+      echo($boiss->getNomProduit());
+    }
+  
+  }
+dd("azeee");
+}
 
 
 //Test sur la variété et la taille de boisson
   if ( $ligneCmd->getProduit() instanceof Boisson) {
-    // dd($ligneCmd->getProduit()->getStock());
     $tab=[];
        $quantite=$ligneCmd->getQuantite();
       // dd($this->boissonRepository->findAll());
       foreach ($this->boissonRepository->findAll() as $boissonT) {
       $tab[]=$boissonT->getNomProduit();
       }
-
         foreach ($tab as $nomB) {
           if ($ligneCmd->getProduit()->getNomProduit()==$nomB) {
             foreach ($ligneCmd->getProduit()->getTailleBoissons() as $model) {

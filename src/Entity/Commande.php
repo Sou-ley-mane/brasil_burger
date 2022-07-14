@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations: [
         "post" => [
 
-        // 'denormalization_context' => ['groups' => ["commande:write"]],
+        'denormalization_context' => ['groups' => ["commande:write"]],
         ],
         "get" => [
             'normalization_context' => ['groups' => ['commande:read']],
