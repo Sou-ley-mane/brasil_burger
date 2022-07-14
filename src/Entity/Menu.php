@@ -49,7 +49,7 @@ class Menu extends Produit
     protected $nomProduit;
 
     #[Groups(["produit:write:menu",'produit:menu:read'])]
-    protected $image;
+    protected $plainimage;
 
     // // #[Groups(["produit:write:menu"])]
     // protected $prix;

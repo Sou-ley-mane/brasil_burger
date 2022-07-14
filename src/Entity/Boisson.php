@@ -33,6 +33,10 @@ class Boisson extends Produit
   #[Groups(["produit:write:boisson","produit:read:boisson"])]
     #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'boissons',cascade:["persist"])]
     private $tailleBoissons;
+    
+    #[Groups(["produit:write:boisson","produit:read:boisson"])]
+  #[ORM\Column(type: 'integer', nullable: true)]
+  private $Stock;
 
     public function __construct()
     {
@@ -69,6 +73,18 @@ class Boisson extends Produit
         if ($this->tailleBoissons->removeElement($tailleBoisson)) {
             $tailleBoisson->removeBoisson($this);
         }
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->Stock;
+    }
+
+    public function setStock(?int $Stock): self
+    {
+        $this->Stock = $Stock;
 
         return $this;
     }

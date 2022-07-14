@@ -31,6 +31,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         "get"=>[
             // 'normalization_context' => ['groups' => ["produit:read"]],
         ],
+
+        "post",
            
             ]
     )]
@@ -52,15 +54,7 @@ class Produit
     protected $nomProduit;
 
    
-    
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
-    #[ORM\Column(type: 'string')]
-    protected $image;
-    
-    
-    // #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
-    // #[SerializedName("image")]
-    // protected $bImage;
+
     
     // #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
     #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
@@ -80,6 +74,14 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
     private $ligneCommandes;
 
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $image;
+
+  
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite","produit:write:menu","produit:read:menu"])]
+    #[SerializedName("image")]
+    private $plainimage;
+
     
     public function __construct()
     {
@@ -87,9 +89,7 @@ class Produit
         $this->ligneCommandes = new ArrayCollection();
     }
 
-  
-
-  
+ 
     
     public function getId(): ?int
     {
@@ -109,32 +109,7 @@ class Produit
 
         return $this;
     }
-    // ******************************************************
-    // public function getBImage(): ?string
-    // {
-    //     return $this->bImage;
-    // }
-
-    // public function setBImage(string $bImage): self
-    // {
-    //     $this->image = $bImage;
-
-    //     return $this;
-    // }
-    // ***************************************************
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
+ 
     public function getPrix(): ?int
     {
         return $this->prix;
@@ -195,13 +170,7 @@ class Produit
     //     return $this;
     // }
 
-    // /**
-    //  * @return Collection<int, LigneCommande>
-    //  */
-    // public function getLigneCommandes(): Collection
-    // {
-    //     return $this->ligneCommandes;
-    // }
+ 
 
     public function addLigneCommande(LigneCommande $ligneCommande): self
     {
@@ -221,6 +190,32 @@ class Produit
                 $ligneCommande->setProduit(null);
             }
         }
+
+        return $this;
+    }
+
+
+
+    public function getPlainimage(): ?string
+    {
+        return $this->plainimage;
+    }
+
+    public function setPlainimage(?string $plainimage): self
+    {
+        $this->plainimage = $plainimage;
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

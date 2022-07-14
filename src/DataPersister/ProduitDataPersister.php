@@ -35,29 +35,21 @@ public function supports($data): bool
 { 
 return $data instanceof Produit;
 }
-// // **************************
 
-public function persist($data)
+public function persist($data,array $context=[])
 {
-//  dd($data-> getImage());
-
-// Calculer l;e prix du menu
-if ($data instanceof Menu) {
-    // $data->prixTotalBoisson($data);
-    // $data->prixTotalFrite($data);
-    // $data->prixTotalBurger($data);
-    // $data->prixMenu($data);
-  $data->setPrix( $data->prixMenu($data));
   
-}
-
-// $image=$data->getbImage();
-// $image->setImage(file_get_contents($image));
-// dd($image);
-$data->setGestionnaire($this->token->getUser()); 
+  // Calculer l;e prix du menu
+  if ($data instanceof Menu) {
+    $data->setPrix( $data->prixMenu($data));
+  }
+  $data->setImage(file_get_contents($data->getPlainimage()));
+  // $data->setGestionnaire($this->token->getUser()); 
 $this->em->persist($data);
 $this->em->flush();
 }
+
+
 
  //Suppression des données
 public function remove($data)
@@ -67,14 +59,16 @@ public function remove($data)
     $this->em->persist($data);
     $this->em  ->flush();
   }
-  // || $data instanceof Boisson || $data instanceof Frites
+
   else if ($data instanceof Burger ) {
-   if ($data->getMenuBurgers()!=null) {
-     dd("impossible de supprimer ce burgers");
-    $result="impossible de supprimer ce burgers";
-    return new JsonResponse($result ,400);
+    $menuBurgers=$data->getMenuBurgers(); 
+      if (count($menuBurgers)!=0) {
+        $result="impossible de supprimer ce burgers car il se trouve dans un menu";
+        dd( $result);
+        return new JsonResponse($result ,400);
+      
+       }
   
-   }
     $data->setEtatProduit("false");
     $this->em->persist($data);
     $this->em  ->flush();

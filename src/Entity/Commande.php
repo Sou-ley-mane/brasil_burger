@@ -30,14 +30,10 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations: [
         "post" => [
 
-            'denormalization_context' => ['groups' => ["commande:write"]],
-            
-            
+        'denormalization_context' => ['groups' => ["commande:write"]],
         ],
         "get" => [
             'normalization_context' => ['groups' => ['commande:read']],
-            
-
         ],
 
     ]
@@ -53,13 +49,13 @@ class Commande
     #[ORM\Column(type: 'string', length: 255)]
     private $etatCmd = "commande";
 
-    #[Groups(['commande:read'])]
+    // #[Groups(['commande:read'])]
     #[ORM\Column(type: 'string')]
     private $numCmd;
 
     // #[Groups(["commande:write"])]
 
-    #[Groups(['commande:read'])]
+    // #[Groups(['commande:read'])]
     #[ORM\Column(type: 'datetime')]
     private $dateCmd;
 
@@ -70,12 +66,12 @@ class Commande
     // #[ORM\Column(type: 'integer')]
     // private $paiement;
     // #[Groups(["commande:write"])]
-    #[ORM\Column(type: 'string', length: 100)]
-    private $telLivraison; 
+    // #[ORM\Column(type: 'string', length: 100)]
+    // private $telLivraison; 
 
 
     // #[ApiSubresource]
-    #[Groups(['commande:read'])]
+    // #[Groups(['commande:read'])]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
     private $client;
 
@@ -110,11 +106,6 @@ class Commande
         $this->dateCmd = new \DateTime();
         $this->ligneCommandes = new ArrayCollection();
     }
-
-
-
-
-
 
     public function getId(): ?int
     {
@@ -181,17 +172,17 @@ class Commande
     //     return $this;
     // }
 
-    public function getTelLivraison(): ?string
-    {
-        return $this->telLivraison;
-    }
+    // public function getTelLivraison(): ?string
+    // {
+    //     return $this->telLivraison;
+    // }
 
-    public function setTelLivraison(string $telLivraison): self
-    {
-        $this->telLivraison = $telLivraison;
+    // public function setTelLivraison(string $telLivraison): self
+    // {
+    //     $this->telLivraison = $telLivraison;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
 
 

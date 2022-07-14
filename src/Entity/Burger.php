@@ -31,9 +31,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
         "get"=>[
             'normalization_context' => ['groups' => ['produit:read:burger']],
         ],
-           
-
-       
             ]
     )]
 class Burger extends Produit
