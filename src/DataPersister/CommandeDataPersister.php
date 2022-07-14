@@ -53,9 +53,9 @@ public function persist($data)
   $nombreLigneCommande=count($data->getLigneCommandes());
 foreach ($data->getLigneCommandes() as $ligneCmd) {
 
-if ($ligneCmd->getProduit() instanceof Menu) {
-dd("okkkk");
-}
+// if ($ligneCmd->getProduit() instanceof Menu) {
+// dd("okkkk");
+// }
 
 
 //Test sur la variété et la taille de boisson
