@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
     collectionOperations:[
         "get"=>[
-            // 'normalization_context' => ['groups' => ["produit:read"]],
+            'normalization_context' => ['groups' => ["produit:read"]],
         ],
 
         "post",
@@ -48,7 +48,7 @@ class Produit
  
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read'])]
     
     // #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
     protected $nomProduit;
@@ -57,7 +57,7 @@ class Produit
 
     
     // #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite"])]
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read'])]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
@@ -74,11 +74,12 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
     private $ligneCommandes;
 
+    #[Groups(['produit:read:burger',"produit:read:boisson","produit:read:frite",'produit:menu:read','produit:catalogue:read'])]
     #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 
   
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite","produit:write:menu","produit:read:menu"])]
+    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite","produit:write:menu"])]
     #[SerializedName("image")]
     private $plainimage;
 
@@ -210,7 +211,9 @@ class Produit
 
     public function getImage()
     {
-        return $this->image;
+        // dd();
+        return (is_resource($this->image)?utf8_encode(base64_encode(stream_get_contents($this->image))):$this->image);
+                    //   base64_encode(stream_get_contents($this->image)) ;
     }
 
     public function setImage($image): self

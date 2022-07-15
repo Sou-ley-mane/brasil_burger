@@ -43,7 +43,11 @@ public function persist($data,array $context=[])
   if ($data instanceof Menu) {
     $data->setPrix( $data->prixMenu($data));
   }
-  $data->setImage(file_get_contents($data->getPlainimage()));
+  // dd($data->getPlainimage());
+  if ($data->getPlainimage()) {
+     $data->setImage(file_get_contents($data->getPlainimage()));
+  }
+
   // $data->setGestionnaire($this->token->getUser()); 
 $this->em->persist($data);
 $this->em->flush();

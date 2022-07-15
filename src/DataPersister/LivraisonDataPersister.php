@@ -51,14 +51,11 @@ public function persist($data){
             if (empty($livreursDisponible[array_rand($livreursDisponible)])) {
                 $result="Aucun livreur n'est pas disponible";
                 return new JsonResponse($result ,400);
-            }
-            
+            }               
             $livreurCommande=$livreursDisponible[array_rand($livreursDisponible)];
         // if ($livreurCommande->getEtat()=="indisponible") {
         //     $result="le livreur . .n'est pas disponible";
         //     return new JsonResponse($result ,400);
-        //         }
-        
         //le livreur pour livrer la commande
         $data->setLivreur($livreurCommande);
         $data->setEtatLivraison("false");

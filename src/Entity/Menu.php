@@ -37,7 +37,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'denormalization_context' => ['groups' => ["produit:write:menu"]]
         ]
      ],
-     itemOperations:["put","get","delete"]
+     itemOperations:["put","get"=>[
+        'normalization_context' => ['groups' => ['produit:menu:read']]
+
+     ],"delete"]
 )]
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu extends Produit

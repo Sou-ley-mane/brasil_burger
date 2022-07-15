@@ -21,7 +21,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
         // "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
 
-    itemOperations:["put","get" =>[],"delete"
+    itemOperations:["put","get" =>[
+        'normalization_context' => ['groups' => ['produit:read:burger']],
+    ],"delete"
 ],
     collectionOperations:[
         "post"=>[

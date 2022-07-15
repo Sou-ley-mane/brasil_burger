@@ -36,8 +36,7 @@ public function __construct(TokenStorageInterface $token,EntityManagerInterface 
     $this->em = $em; 
     $this->email=$email;
     $this->boissonRepository=$boissonRepository;
-    
-      
+       
 } 
 
 // // Verification de la prise en  charge des données
@@ -53,15 +52,15 @@ public function persist($data)
   foreach ($data->getLigneCommandes() as $ligneCmd) {
   // dd("azerty"); 
 
-if ($ligneCmd->getProduit() instanceof Menu) {
-  foreach ($ligneCmd->getProduit()->getMenuTailleBoissons() as $taille) {
-    foreach ($taille->getTailleBoisson()->getBoissons() as $boiss) {
-      echo($boiss->getNomProduit());
-    }
+// if ($ligneCmd->getProduit() instanceof Menu) {
+//   foreach ($ligneCmd->getProduit()->getMenuTailleBoissons() as $taille) {
+//     foreach ($taille->getTailleBoisson()->getBoissons() as $boiss) {
+//       echo($boiss->getNomProduit());
+//     }
   
-  }
-dd("azeee");
-}
+//   }
+// // dd("azeee");
+// }
 
 
 //Test sur la variété et la taille de boisson
