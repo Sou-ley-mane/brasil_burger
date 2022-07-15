@@ -18,6 +18,9 @@ DirectoryIndex index.php
 </IfModule>
 
 <IfModule mod_rewrite.c>
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=S1
+SetEnvIf Content-Type "(.*)" HTTP_CONTENT_TYPE=S1
+SetEnvIf Accept "(.*)" HTTP_ACCEPT=S1  
     RewriteEngine On
 
     # Determine the RewriteBase automatically and set it as environment variable.
