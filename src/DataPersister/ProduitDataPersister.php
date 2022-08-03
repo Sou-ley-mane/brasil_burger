@@ -48,7 +48,7 @@ public function persist($data,array $context=[])
      $data->setImage(file_get_contents($data->getPlainimage()));
   }
 
-  // $data->setGestionnaire($this->token->getUser()); 
+  $data->setGestionnaire($this->token->getUser()); 
 $this->em->persist($data);
 $this->em->flush();
 }

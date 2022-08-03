@@ -34,7 +34,7 @@ class Boisson extends Produit
     #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'boissons',cascade:["persist"])]
     private $tailleBoissons;
     
-    #[Groups(["produit:write:boisson","produit:read:boisson"])]
+    #[Groups(["produit:write:boisson","produit:read:boisson",'produit:complement:read'])]
   #[ORM\Column(type: 'integer', nullable: true)]
   private $Stock;
 

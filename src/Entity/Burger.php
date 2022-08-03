@@ -37,8 +37,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     )]
 class Burger extends Produit
 {
- 
-    // #[Groups(['produit:read:burger'])]
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
     private $menuBurgers;
 

@@ -1,4 +1,6 @@
 api_platform:
+    formats:
+        json: ['application/json']
     title: 'Symfony Brasil Burger'
     description: 'Application web et mobile.'
     version: '1.0.0'

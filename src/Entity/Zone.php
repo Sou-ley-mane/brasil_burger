@@ -26,16 +26,16 @@ class Zone
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
-    #[Groups(["zone:write"])]
+    #[Groups(["zone:write",'zone:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $nomZone;
 
 
-    #[Groups(["zone:write"])]
+    #[Groups(["zone:write",'zone:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $etatZone;
 
-    #[Groups(["zone:write"])]
+    #[Groups(["zone:write",'zone:read'])]
     #[ORM\Column(type: 'integer')]
     private $coutLivraison;
 

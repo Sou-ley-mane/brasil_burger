@@ -43,13 +43,15 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read','produit:complement:read','produit:menu:read','produit:menu:lecture'])]
+
+    // #[Groups(['produit:complement:read'])]
     protected $id;
 
  
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read'])]
-    
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read','produit:complement:read','produit:menu:lecture','produit:menuBurger:lecture','produit:menuFrite:lecture','produit:menuTaille:lecture'])]
     // #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
     protected $nomProduit;
 
@@ -57,7 +59,7 @@ class Produit
 
     
     // #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read'])]
+    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read','produit:complement:read','produit:menu:lecture'])]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
@@ -74,12 +76,12 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
     private $ligneCommandes;
 
-    #[Groups(['produit:read:burger',"produit:read:boisson","produit:read:frite",'produit:menu:read','produit:catalogue:read'])]
+    #[Groups(['produit:read:burger',"produit:read:boisson","produit:read:frite",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
     #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 
   
-    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite","produit:write:menu"])]
+    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite",'produit:complement:read'])]
     #[SerializedName("image")]
     private $plainimage;
 

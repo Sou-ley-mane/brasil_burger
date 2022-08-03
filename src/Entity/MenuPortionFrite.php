@@ -2,10 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuPortionFriteRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+#[ApiResource( 
+    attributes:[
+        // Securuté globale dans une ressource 
+        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        // "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
+     collectionOperations:[
+        // ****************************************
+      
 
+        // ******************************************
+        "get"=>[
+            'normalization_context' => ['groups' => ['produit:menuFrite:read']]
+        ],
+        "post"=>[
+            'denormalization_context' => ['groups' => ["produit:write:menuFrite"]]
+        ]
+     ],
+     itemOperations:["put","get"=>[
+        'normalization_context' => ['groups' => ['produit:menuFrite:lecture']]
+
+     ],"delete"]
+)]
 #[ORM\Entity(repositoryClass: MenuPortionFriteRepository::class)]
 class MenuPortionFrite
 {
@@ -14,7 +37,7 @@ class MenuPortionFrite
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:lecture','produit:menu:read','produit:menuFrite:lecture'])]
     #[ORM\Column(type: 'integer')]
     private $quantite;
 
@@ -24,7 +47,7 @@ class MenuPortionFrite
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuPortionFrites')]
     private $menus;
 
-#[Groups(["produit:write:menu",'produit:menu:read'])]
+#[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuFrite:lecture'])]
     #[ORM\ManyToOne(targetEntity: Frites::class, inversedBy: 'menuPortionFrites')]
     private $frite;
 

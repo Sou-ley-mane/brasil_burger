@@ -19,10 +19,10 @@ class TailleBoisson
     #[ORM\Column(type: 'integer')]
     private $id;
     // 
-    #[Groups(['produit:complement:read'])]
+    #[Groups(['produit:complement:read','produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $libelle;
-    #[Groups(['produit:complement:read'])]
+    #[Groups(['produit:complement:read','produit:menu:lecture','produit:menuTaille:lecture'])]
     #[ORM\ManyToMany(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     private $boissons;
 

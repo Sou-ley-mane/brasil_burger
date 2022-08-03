@@ -2,28 +2,55 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuTailleBoissonRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+#[ApiResource( 
+    attributes:[
+        // Securuté globale dans une ressource 
+        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        // "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
+     collectionOperations:[
+        // ****************************************
+      
 
+        // ******************************************
+        "get"=>[
+            'normalization_context' => ['groups' => ['produit:menuTaille:read']]
+        ],
+        "post"=>[
+            'denormalization_context' => ['groups' => ["produit:write:menuTaille"]]
+        ]
+     ],
+     itemOperations:["put","get"=>[
+        'normalization_context' => ['groups' => ['produit:menuTaille:lecture']]
+
+     ],"delete"]
+)]
 #[ORM\Entity(repositoryClass: MenuTailleBoissonRepository::class)]
 class MenuTailleBoisson
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    
     #[ORM\Column(type: 'integer')]
+    // #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture'])]
     private $id;
-    #[Groups(["produit:write:menu"])]
+
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:read','produit:menuTaille:lecture'])]
     #[ORM\Column(type: 'integer')]
     private $quantite;
 
+    #[Groups(['produit:menu:read','produit:menu:lecture'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailleBoissons')]
     private $menu;
     
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture'])]
     #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'menuTailleBoissons')]
     private $tailleBoisson;
 

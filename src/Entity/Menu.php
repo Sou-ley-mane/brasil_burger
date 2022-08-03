@@ -38,7 +38,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
      ],
      itemOperations:["put","get"=>[
-        'normalization_context' => ['groups' => ['produit:menu:read']]
+        'normalization_context' => ['groups' => ['produit:menu:lecture']]
 
      ],"delete"]
 )]
@@ -46,26 +46,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Menu extends Produit
 {
   
-
-
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+  
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture'])]
     protected $nomProduit;
 
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture'])]
     protected $plainimage;
 
     // // #[Groups(["produit:write:menu"])]
     // protected $prix;
 
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:["persist"])]
     private $menuBurgers;
 
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
     #[ORM\OneToMany(mappedBy: 'menus', targetEntity: MenuPortionFrite::class,cascade:["persist"])]
     private $menuPortionFrites;
 
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTailleBoisson::class,cascade:["persist"])]
     private $menuTailleBoissons;
 

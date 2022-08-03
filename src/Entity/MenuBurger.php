@@ -2,10 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuBurgerRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+#[ApiResource( 
+    attributes:[
+        // Securuté globale dans une ressource 
+        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+        // "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
+     collectionOperations:[
+        // ****************************************
+      
 
+        // ******************************************
+        "get"=>[
+            'normalization_context' => ['groups' => ['produit:menuBurger:read']]
+        ],
+        "post"=>[
+            'denormalization_context' => ['groups' => ["produit:write:menuBurger"]]
+        ]
+     ],
+     itemOperations:["put","get"=>[
+        'normalization_context' => ['groups' => ['produit:menuBurger:lecture']]
+
+     ],"delete"]
+)]
 #[ORM\Entity(repositoryClass: MenuBurgerRepository::class)]
 class MenuBurger
 {
@@ -15,11 +38,11 @@ class MenuBurger
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Groups(["produit:write:menu"])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuBurger:read','produit:menuBurger:lecture'])]
     #[ORM\Column(type: 'integer')]
     private $quantite;
     
-    #[Groups(["produit:write:menu",'produit:menu:read'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuBurger:lecture'])]
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
     private $burger;
 
