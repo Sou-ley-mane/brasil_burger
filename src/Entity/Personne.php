@@ -17,17 +17,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    
     #[ORM\Column(type: 'integer')]
-    // #[Groups(['burger:read:simple','burger:write:simple'])]
+    #[Groups(['burger:read:simple','burger:write:simple', 
+    'personne:client:read',
+    'personne:client:lecture'])]
     private $id;
+
     #[Groups([
         'personne:gestionnaire:write',
         "personne:gestionnaire:read",
         'personne:client:write',
         'personne:client:read',
+        'personne:client:lecture',
         'personne:livreur:write',
-        'personne:livreur:read'
+        'personne:livreur:read',
+        'commande:read'
         ])]
     // #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -39,8 +43,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         "personne:gestionnaire:read",
         'personne:client:write',
         'personne:client:read',
+    'personne:client:lecture',
         'personne:livreur:write',
-        'personne:livreur:read'
+        'personne:livreur:read',
+        'commande:read'
     
     ])]
     #[ORM\Column(type: 'string', length: 200)]

@@ -38,11 +38,11 @@ class MenuBurger
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuBurger:read','produit:menuBurger:lecture'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuBurger:read','produit:menuBurger:lecture','get1produit'])]
     #[ORM\Column(type: 'integer')]
     private $quantite;
     
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuBurger:lecture'])]
+    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuBurger:lecture','get1produit'])]
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
     private $burger;
 

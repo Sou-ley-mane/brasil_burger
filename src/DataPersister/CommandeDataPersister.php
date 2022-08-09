@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\TailleBoisson;
 use App\Repository\BoissonRepository;
+use App\Repository\ClientRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -30,12 +31,13 @@ private MaillerService $email;
 
 
 public function __construct(TokenStorageInterface $token,EntityManagerInterface $em,MaillerService $email,
-  BoissonRepository $boissonRepository)
+  BoissonRepository $boissonRepository,ClientRepository $clientRepo)
 {
     $this->token = $token->getToken();
     $this->em = $em; 
     $this->email=$email;
     $this->boissonRepository=$boissonRepository;
+    $this->clientRepo=$clientRepo;
        
 } 
 
@@ -107,7 +109,9 @@ public function persist($data)
 
                                               
 $data-> setNumCmd("CMD00".date("his"));
-$data->setClient($this->token->getUser()); 
+// $data->setClient($this->token->getUser()); 
+$data->setClient($this->clientRepo->find(11)); 
+
 $this->em->persist($data);
 $this->em->flush();
 // $this->email->sendEmail($this->token->getUser()->getEmail(),$this->token->getUser()->getPrenom()  );

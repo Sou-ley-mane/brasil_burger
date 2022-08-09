@@ -1,6 +1,10 @@
 api_platform:
     formats:
         json: ['application/json']
+        jsonld: ['application/ld+json']
+        html: ["text/html"]
+        mlutipart: ["multipart/form-data"]
+
     title: 'Symfony Brasil Burger'
     description: 'Application web et mobile.'
     version: '1.0.0'

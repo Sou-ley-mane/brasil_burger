@@ -51,6 +51,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
         "personne:gestionnaire:read",
         'personne:client:write',
         'personne:client:read',
+    'personne:client:lecture',
         'personne:livreur:write',
         'personne:livreur:read'
         ])]

@@ -22,11 +22,20 @@ class LigneCommande
     private $id;
 
     // #[Groups(["commande:write"])]
-    #[Groups(["commande:write",'commande:read'])]
+    #[Groups(["commande:write",
+    'commande:read',
+    'commande:lecture',
+    'personne:client:read',
+    'personne:client:lecture'
+    ])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $quantite;
     
-    #[Groups(["commande:write",'commande:read'])]
+    #[Groups(["commande:write",
+    'commande:read',
+    'commande:lecture',
+    'personne:client:read',
+    'personne:client:lecture'])]
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
     private $produit;
 
@@ -34,6 +43,8 @@ class LigneCommande
     // #[Groups(["commande:write"])]
     private $commande;
 
+    #[Groups(['commande:read','commande:lecture', 'personne:client:read',
+    'personne:client:lecture'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $prix;
 

@@ -30,13 +30,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Boisson extends Produit
 {
     
-  #[Groups(["produit:write:boisson","produit:read:boisson"])]
+    #[Groups(["produit:write:boisson","produit:read:boisson","produit:menu:read"])]
     #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'boissons',cascade:["persist"])]
     private $tailleBoissons;
     
     #[Groups(["produit:write:boisson","produit:read:boisson",'produit:complement:read'])]
-  #[ORM\Column(type: 'integer', nullable: true)]
-  private $Stock;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $Stock;
 
     public function __construct()
     {

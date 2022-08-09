@@ -14,18 +14,20 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 #[ApiResource(
-    attributes:[
-        "pagination_enabled"=>true,
-        "pagination_items_per_page"=>3
-            ],
+    // attributes:[
+    //     "pagination_enabled"=>true,
+    //     "pagination_items_per_page"=>3
+    //         ],
 
     itemOperations: [
         "put" => [
             // Securuté globale dans une ressource 
-            "security" => "is_granted('ROLE_GESTIONNAIRE')",
-            "security_message" => "Vous n'avez pas access à cette Ressource",
+            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            // "security_message" => "Vous n'avez pas access à cette Ressource",
 
-        ], "get" => [], "delete"
+        ], "get" => [
+            'normalization_context' => ['groups' => ['commande:lecture']],
+        ], "delete"
     ],
     collectionOperations: [
         "post" => [
@@ -44,18 +46,26 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['commande:read','commande:lecture'])]
     private $id;
-
+    
+    #[Groups(['commande:read',
+    'personne:client:read',
+    'personne:client:lecture'])]
     #[ORM\Column(type: 'string', length: 255)]
-    private $etatCmd = "commande";
+    private $etatCmd = "En cours";
 
-    // #[Groups(['commande:read'])]
+    #[Groups(['commande:read',
+    'personne:client:read',
+    'personne:client:lecture'])]
     #[ORM\Column(type: 'string')]
     private $numCmd;
 
     // #[Groups(["commande:write"])]
 
-    // #[Groups(['commande:read'])]
+    #[Groups(['commande:read',
+    'personne:client:read',
+    'personne:client:lecture'])]
     #[ORM\Column(type: 'datetime')]
     private $dateCmd;
 
@@ -71,13 +81,13 @@ class Commande
 
 
     // #[ApiSubresource]
-    // #[Groups(['commande:read'])]
+    #[Groups(['commande:read',"commande:lecture"])]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
     private $client;
 
     // #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'commandes')]
     // private $produits;
-
+    // #[Groups(["commande:write"])]
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
     private $livraison;
 
@@ -96,9 +106,21 @@ class Commande
 
     // #[Groups(['commande:read'])]
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade: ["persist"])]
-    #[Groups(["commande:write","commande:read"])]
+    #[Groups(["commande:write","commande:read",
+    "commande:lecture",
+    'personne:client:read',
+    'personne:client:lecture'
+    ])]
     #[SerializedName("Produits")]
     private $ligneCommandes;
+
+    #[Groups(["commande:write","commande:read",
+    "commande:lecture",
+    'personne:client:read',
+    'personne:client:lecture'
+    ])]
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    private ?Zone $zone = null;
 
     public function __construct()
     {
@@ -290,6 +312,18 @@ class Commande
                 $ligneCommande->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getZone(): ?Zone
+    {
+        return $this->zone;
+    }
+
+    public function setZone(?Zone $zone): self
+    {
+        $this->zone = $zone;
 
         return $this;
     }

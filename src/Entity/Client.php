@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
@@ -24,7 +25,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     ]
 ],
-    itemOperations:["put","get","delete"=>[
+    itemOperations:["put","get"=>[
+        'normalization_context' => ['groups' => ['personne:client:lecture']]
+
+    ],"delete"=>[
         // //Securité d'une opération
         // "security"=>"is_granted('ROLE_GESTIONNAIRE')",
         // "security"=>"Votre profile ne vous permet pas d'effectuer une suppression"
@@ -36,18 +40,27 @@ class Client extends User
    
     #[Groups([
         'personne:client:write',
-        'personne:client:read']
-        )]
+        'personne:client:read',
+        'personne:client:lecture'
+        
+        ])]
     #[ORM\Column(type: 'string', length: 255)]
     private $adresse;
     
     #[Groups([
         'personne:client:write',
-        'personne:client:read'
+        'personne:client:read',
+        'personne:client:lecture'
         ])]
     #[ORM\Column(type: 'string', length: 100)]
     private $telephone;
-
+    
+    #[ApiSubresource]
+    #[Groups([
+        'personne:client:write',
+        'personne:client:read',
+        'personne:client:lecture'
+        ])]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Commande::class)]
     private $commandes;
 

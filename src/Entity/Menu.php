@@ -15,121 +15,145 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource( 
-    attributes:[
+#[ApiResource(
+    attributes: [
         // Securuté globale dans une ressource 
         // "security" => "is_granted('ROLE_GESTIONNAIRE')",
         // "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],
-     collectionOperations:[
+    collectionOperations: [
         // ****************************************
         "add" => [
             'method' => 'Post',
-            "path"=>"/menu2",
-            "controller"=>MenuController::class,
+            "path" => "/menu2",
+            "controller" => MenuController::class,
         ],
 
         // ******************************************
-        "get"=>[
+        "get" => [
             'normalization_context' => ['groups' => ['produit:menu:read']]
         ],
-        "post"=>[
+        "post" => [
             'denormalization_context' => ['groups' => ["produit:write:menu"]]
         ]
-     ],
-     itemOperations:["put","get"=>[
+    ],
+    itemOperations: ["put", "get" => [
         'normalization_context' => ['groups' => ['produit:menu:lecture']]
 
-     ],"delete"]
+    ], "delete"]
 )]
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu extends Produit
 {
-  
-  
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture'])]
+
+
+    #[Groups([
+        "produit:write:menu",
+        // 'produit:menu:read',
+        // 'produit:menu:lecture'
+    ])]
     protected $nomProduit;
 
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture'])]
+    // #[Groups([
+    //     "produit:write:menu",
+    // 'produit:menu:read'
+    // ,'produit:menu:lecture'
+    // ])]
     protected $plainimage;
+
 
     // // #[Groups(["produit:write:menu"])]
     // protected $prix;
 
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:["persist"])]
+    #[Groups([
+        "produit:write:menu", 'produit:menu:read', 'produit:catalogue:read', 'produit:menu:lecture','get1produit'        
+    ])]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class, cascade: ["persist"])]
     private $menuBurgers;
 
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
-    #[ORM\OneToMany(mappedBy: 'menus', targetEntity: MenuPortionFrite::class,cascade:["persist"])]
+    #[Groups([
+        "produit:write:menu",
+        'produit:menu:read', 'produit:catalogue:read',
+        'produit:menu:lecture',
+        'get1produit'
+    ])]
+    #[ORM\OneToMany(mappedBy: 'menus', targetEntity: MenuPortionFrite::class, cascade: ["persist"])]
     private $menuPortionFrites;
 
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTailleBoisson::class,cascade:["persist"])]
+    #[Groups([
+        "produit:write:menu",
+        'produit:menu:read',
+        'produit:catalogue:read',
+        'produit:menu:lecture',
+        'get1produit'
+    ])]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTailleBoisson::class, cascade: ["persist"])]
     private $menuTailleBoissons;
 
     public function __construct()
     {
-       
-        
+
+
         $this->menuBurgers = new ArrayCollection();
         $this->menuPortionFrites = new ArrayCollection();
         $this->menuTailleBoissons = new ArrayCollection();
-        
     }
 
- 
-    public function prixTotalFrite($menu){
-        $prix=0;
-        $portionDeFrite=$menu->getMenuPortionFrites();
+
+    public function prixTotalFrite($menu)
+    {
+        $prix = 0;
+        $portionDeFrite = $menu->getMenuPortionFrites();
         foreach ($portionDeFrite as $frite) {
-            $quantiteFrite=$frite->getQuantite();
-            $prixFrite=$frite->getFrite()->getPrix();
-            $prix+=$prixFrite* $quantiteFrite;
+            $quantiteFrite = $frite->getQuantite();
+            $prixFrite = $frite->getFrite()->getPrix();
+            $prix += $prixFrite * $quantiteFrite;
         }
         return $prix;
     }
 
-    public function prixTotalBurger($menu){
-        $prix=0;
-        $menuBurger=$menu->getMenuBurgers();
+    public function prixTotalBurger($menu)
+    {
+        $prix = 0;
+        $menuBurger = $menu->getMenuBurgers();
         foreach ($menuBurger as $burger) {
-            $prixBurger=$burger->getBurger()->getPrix();
-            $quantiteDansLeMenu=$burger->getQuantite();
-            $prix+=$prixBurger*$quantiteDansLeMenu;
+            $prixBurger = $burger->getBurger()->getPrix();
+            $quantiteDansLeMenu = $burger->getQuantite();
+            $prix += $prixBurger * $quantiteDansLeMenu;
         }
         return $prix;
     }
 
 
 
-    public function prixTotalBoisson($menu){
-        $prix=0;
-        $boissons=$menu->getMenuTailleBoissons();
-        foreach ( $boissons as  $tailleBoisson) {
+    public function prixTotalBoisson($menu)
+    {
+        $prix = 0;
+        $boissons = $menu->getMenuTailleBoissons();
+        foreach ($boissons as  $tailleBoisson) {
             //Quantité
-          $nombreDeBoisson=$tailleBoisson-> getQuantite();
-          $tailleBoisson=$tailleBoisson->getTailleBoisson();
-           //la boisson concerner
-         $typeDeBoissons= $tailleBoisson->getBoissons();
-          foreach ($typeDeBoissons as $typeBoisson) {
-            //Prix de la Boisson concernée 
-            $prixDuBoisson=$typeBoisson->getPrix();
-            $prix+=$prixDuBoisson*$nombreDeBoisson;
-          }
-           
+            $nombreDeBoisson = $tailleBoisson->getQuantite();
+            $tailleBoisson = $tailleBoisson->getTailleBoisson();
+            //la boisson concerner
+            $typeDeBoissons = $tailleBoisson->getBoissons();
+            foreach ($typeDeBoissons as $typeBoisson) {
+                //Prix de la Boisson concernée 
+                $prixDuBoisson = $typeBoisson->getPrix();
+                $prix += $prixDuBoisson * $nombreDeBoisson;
+            }
         }
-       
+
         return $prix;
     }
 
 
-    public function prixMenu($menuCommande){
-        $totalBurger=$menuCommande->prixTotalBurger($menuCommande);
-        $totalFrite=$menuCommande->prixTotalFrite($menuCommande);
-        $totalBoisson=$menuCommande->prixTotalBoisson($menuCommande);
-         $reduction=($totalBurger+$totalBoisson+$totalFrite)*0.5;
-        return  $reduction ;
+    public function prixMenu($menuCommande)
+    {
+        $totalBurger = $menuCommande->prixTotalBurger($menuCommande);
+        $totalFrite = $menuCommande->prixTotalFrite($menuCommande);
+        $totalBoisson = $menuCommande->prixTotalBoisson($menuCommande);
+        $reduction = ($totalBurger + $totalBoisson + $totalFrite) * 0.5;
+        return  $reduction;
     }
 
     /**
@@ -221,15 +245,4 @@ class Menu extends Produit
 
         return $this;
     }
-    
 }
-                  
-    
-
-    
-
-    
-
-
-
-

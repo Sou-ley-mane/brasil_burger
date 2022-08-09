@@ -7,39 +7,44 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuTailleBoissonRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource( 
-    attributes:[
-        // Securuté globale dans une ressource 
-        // "security" => "is_granted('ROLE_GESTIONNAIRE')",
-        // "security_message"=>"Vous n'avez pas access à cette Ressource",
-    ],
-     collectionOperations:[
-        // ****************************************
+    // attributes:[
+    //     // Securuté globale dans une ressource 
+    //     // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+    //     // "security_message"=>"Vous n'avez pas access à cette Ressource",
+    // ],
+    //  collectionOperations:[
+    //     // ****************************************
       
 
-        // ******************************************
-        "get"=>[
-            'normalization_context' => ['groups' => ['produit:menuTaille:read']]
-        ],
-        "post"=>[
-            'denormalization_context' => ['groups' => ["produit:write:menuTaille"]]
-        ]
-     ],
-     itemOperations:["put","get"=>[
-        'normalization_context' => ['groups' => ['produit:menuTaille:lecture']]
+    //     // ******************************************
+    //     "get"=>[
+    //         'normalization_context' => ['groups' => ['produit:menuTaille:read']]
+    //     ],
+    //     "post"=>[
+    //         'denormalization_context' => ['groups' => ["produit:write:menuTaille"]]
+    //     ]
+    //  ],
+    //  itemOperations:["put","get"=>[
+    //     'normalization_context' => ['groups' => ['produit:menuTaille:lecture']]
 
-     ],"delete"]
+    //  ],"delete"]
 )]
 #[ORM\Entity(repositoryClass: MenuTailleBoissonRepository::class)]
 class MenuTailleBoisson
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    
     #[ORM\Column(type: 'integer')]
-    // #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture'])]
     private $id;
+    // #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture'])]
 
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:read','produit:menuTaille:lecture'])]
+    #[Groups(["produit:write:menu",
+    'produit:menu:read',
+    'produit:menu:lecture',
+    'produit:menuTaille:read'
+    ,'produit:menuTaille:lecture',
+    'get1produit'
+    ])]
     #[ORM\Column(type: 'integer')]
     private $quantite;
 
@@ -50,7 +55,13 @@ class MenuTailleBoisson
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailleBoissons')]
     private $menu;
     
-    #[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture'])]
+    #[Groups([
+    "produit:write:menu"
+    ,'produit:menu:read',
+    'produit:menu:lecture',
+    'produit:menuTaille:lecture',
+    'get1produit'
+    ])]
     #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'menuTailleBoissons')]
     private $tailleBoisson;
 

@@ -43,7 +43,7 @@ class Livraison
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
     private $commandes;
 
-    #[Groups(['livraison:lecture','livraison:ecriture'])]
+    #[Groups(['livraison:lecture','livraison:ecriture','commande:write'])]
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'livraisons')]
     private $zone;
 

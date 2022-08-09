@@ -37,7 +37,7 @@ class MenuPortionFrite
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Groups(["produit:write:menu",'produit:menu:lecture','produit:menu:read','produit:menuFrite:lecture'])]
+    #[Groups(["produit:write:menu",'produit:menu:lecture','produit:menu:read','produit:menuFrite:lecture','get1produit'])]
     #[ORM\Column(type: 'integer')]
     private $quantite;
 
@@ -47,7 +47,7 @@ class MenuPortionFrite
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuPortionFrites')]
     private $menus;
 
-#[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuFrite:lecture'])]
+#[Groups(["produit:write:menu",'produit:menu:read','produit:menu:lecture','produit:menuFrite:lecture','get1produit'])]
     #[ORM\ManyToOne(targetEntity: Frites::class, inversedBy: 'menuPortionFrites')]
     private $frite;
 

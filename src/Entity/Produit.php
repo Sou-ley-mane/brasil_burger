@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\Collection;
@@ -16,26 +17,35 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\InheritanceType("JOINED")]
-#[ORM\DiscriminatorColumn(name:"type",type:"string")]
+#[ORM\DiscriminatorColumn(name: "type", type: "string")]
 #[ORM\DiscriminatorMap([
-     "burger"=>"Burger",
-     "menu"=>"Menu",
-     "boisson"=>"Boisson",
-     "frite"=>"Frites"
-     ])]
+    "burger" => "Burger",
+    "menu" => "Menu",
+    "boisson" => "Boisson",
+    "frite" => "Frites"
+])]
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ApiResource(
 
-    collectionOperations:[
-        "get"=>[
+    collectionOperations: [
+        "get" => [
             'normalization_context' => ['groups' => ["produit:read"]],
         ],
 
         "post",
-           
+
+    ],
+    itemOperations: [
+        "put",
+        "get" => [
+            'normalization_context' => [
+                'groups' => ['get1produit']
             ]
-    )]
+
+        ], "delete"
+    ]
+)]
 
 
 class Produit
@@ -43,63 +53,117 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read','produit:complement:read','produit:menu:read','produit:menu:lecture'])]
-
-    // #[Groups(['produit:complement:read'])]
+    #[Groups(
+        [
+            'produit:read:burger',
+            "produit:read:boisson",
+            "produit:read:frite",
+            'produit:read',
+            'produit:catalogue:read',
+            'produit:complement:read',
+            'produit:menu:read',
+            'produit:menu:lecture',
+            'get1produit',
+            'commande:read',
+        'commande:lecture'
+        ]
+    )]
     protected $id;
 
- 
+
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read','produit:complement:read','produit:menu:lecture','produit:menuBurger:lecture','produit:menuFrite:lecture','produit:menuTaille:lecture'])]
-    // #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
+    #[Groups([
+        "produit:write:burger", 'produit:read:burger', "produit:write:boisson",
+        "produit:read:boisson",
+        "produit:write:frite",
+        "produit:read:frite",
+        'produit:catalogue:read',
+        'produit:complement:read',
+        'produit:menu:lecture',
+        'produit:menuBurger:lecture',
+        'produit:menuFrite:lecture',
+        // #[Assert\NotBlank(message:"Le nom du produit  est Obligatoire")]
+        'produit:menuTaille:lecture',
+        'get1produit',
+        'commande:read',
+        'commande:lecture',
+        'personne:client:read',
+        'personne:client:lecture',
+        'produit:read'
+
+    ])]
     protected $nomProduit;
 
-   
 
-    
+
+
     // #[Assert\NotBlank(message:"Le prix du produit  est Obligatoire")]
-    #[Groups(["produit:write:burger",'produit:read:burger',"produit:write:boisson","produit:read:boisson","produit:write:frite","produit:read:frite",'produit:catalogue:read','produit:complement:read','produit:menu:lecture'])]
+    #[Groups([
+        "produit:write:burger", 'produit:read:burger',
+        "produit:write:boisson",
+        "produit:read:boisson",
+        "produit:write:frite",
+        "produit:read:frite",
+        'produit:catalogue:read',
+        'produit:complement:read',
+        'produit:menu:lecture',
+        'get1produit',
+        'commande:read',
+        'commande:lecture',
+        'personne:client:read',
+        'personne:client:lecture',
+        'produit:read'
+    ])]
     #[ORM\Column(type: 'integer')]
     protected $prix;
 
-   
-    #[ORM\Column(type: 'string', length: 255)]
-    protected $etatProduit="true";
 
-    
+    #[ORM\Column(type: 'string', length: 255)]
+    protected $etatProduit = "true";
+
+
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
     private $gestionnaire;
-   
-    
-   
+
+
+
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
     private $ligneCommandes;
 
-    #[Groups(['produit:read:burger',"produit:read:boisson","produit:read:frite",'produit:menu:read','produit:catalogue:read','produit:menu:lecture'])]
+    #[Groups(['produit:read:burger', 
+    "produit:read:boisson", 
+    "produit:read:frite", 
+    'produit:menu:read', 
+    'produit:catalogue:read', 
+    'produit:menu:lecture',
+    'get1produit',
+    'personne:client:read',
+    'personne:client:lecture',
+    'produit:read'])]
     #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 
-  
-    #[Groups(["produit:write:burger","produit:write:boisson","produit:write:frite",'produit:complement:read'])]
+
+    #[Groups(["produit:write:burger", "produit:write:boisson", "produit:write:frite", 'produit:complement:read'])]
     #[SerializedName("image")]
     private $plainimage;
 
-    
+
     public function __construct()
     {
-        
+
         $this->ligneCommandes = new ArrayCollection();
     }
 
- 
-    
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-  
+
 
     public function getNomProduit(): ?string
     {
@@ -112,7 +176,7 @@ class Produit
 
         return $this;
     }
- 
+
     public function getPrix(): ?int
     {
         return $this->prix;
@@ -173,7 +237,7 @@ class Produit
     //     return $this;
     // }
 
- 
+
 
     public function addLigneCommande(LigneCommande $ligneCommande): self
     {
@@ -214,8 +278,8 @@ class Produit
     public function getImage()
     {
         // dd();
-        return (is_resource($this->image)?utf8_encode(base64_encode(stream_get_contents($this->image))):$this->image);
-                    //   base64_encode(stream_get_contents($this->image)) ;
+        return (is_resource($this->image) ? utf8_encode(base64_encode(stream_get_contents($this->image))) : $this->image);
+        //   base64_encode(stream_get_contents($this->image)) ;
     }
 
     public function setImage($image): self
@@ -224,11 +288,4 @@ class Produit
 
         return $this;
     }
-
-
 }
-
-
-    
-
- 
