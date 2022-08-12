@@ -32,7 +32,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations: [
         "post" => [
 
-        'denormalization_context' => ['groups' => ["commande:write"]],
+            'denormalization_context' => ['groups' => ["commande:write"]],
         ],
         "get" => [
             'normalization_context' => ['groups' => ['commande:read']],
@@ -47,31 +47,38 @@ class Commande
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[Groups([
-    'commande:read',
-    'commande:lecture',
-    'zone:read',
-    'zone:lecture'])]
+        'commande:read',
+        'commande:lecture',
+        'zone:read',
+        'zone:lecture'
+    ])]
     private $id;
-    
-    #[Groups(['commande:read',
-    'personne:client:read',
-    'personne:client:lecture',
-    'zone:read',
-    'zone:lecture'])]
+
+    #[Groups([
+        'commande:read',
+        'personne:client:read',
+        'personne:client:lecture',
+        'zone:read',
+        'zone:lecture'
+    ])]
     #[ORM\Column(type: 'string', length: 255)]
     private $etatCmd = "En cours";
 
-    #[Groups(['commande:read',
-    'personne:client:read',
-    'personne:client:lecture','zone:read','zone:lecture'])]
+    #[Groups([
+        'commande:read',
+        'personne:client:read',
+        'personne:client:lecture', 'zone:read', 'zone:lecture'
+    ])]
     #[ORM\Column(type: 'string')]
     private $numCmd;
 
     // #[Groups(["commande:write"])]
 
-    #[Groups(['commande:read',
-    'personne:client:read',
-    'personne:client:lecture','zone:read','zone:lecture'])]
+    #[Groups([
+        'commande:read',
+        'personne:client:read',
+        'personne:client:lecture', 'zone:read', 'zone:lecture'
+    ])]
     #[ORM\Column(type: 'datetime')]
     private $dateCmd;
 
@@ -87,7 +94,7 @@ class Commande
 
 
     // #[ApiSubresource]
-    #[Groups(['commande:read',"commande:lecture",'zone:read','zone:lecture'])]
+    #[Groups(['commande:read', "commande:lecture", 'zone:read', 'zone:lecture'])]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
     private $client;
 
@@ -111,19 +118,21 @@ class Commande
     // private $produits;
 
     // #[Groups(['commande:read'])]
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade: ["persist"])]
-    #[Groups(["commande:write","commande:read",
-    "commande:lecture",
-    'personne:client:read',
-    'personne:client:lecture'
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class, cascade: ["persist"])]
+    #[Groups([
+        "commande:write", "commande:read",
+        "commande:lecture",
+        'personne:client:read',
+        'personne:client:lecture'
     ])]
     #[SerializedName("Produits")]
     private $ligneCommandes;
 
-    #[Groups(["commande:write","commande:read",
-    "commande:lecture",
-    'personne:client:read',
-    'personne:client:lecture'
+    #[Groups([
+        "commande:write", "commande:read",
+        "commande:lecture",
+        'personne:client:read',
+        'personne:client:lecture'
     ])]
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?Zone $zone = null;
