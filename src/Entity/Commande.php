@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ApiResource(
     // attributes:[
     //     "pagination_enabled"=>true,
-    //     "pagination_items_per_page"=>3
+    //     "pagination_items_per_page"=>10
     //         ],
 
     itemOperations: [

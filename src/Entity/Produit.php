@@ -140,12 +140,13 @@ class Produit
     'get1produit',
     'personne:client:read',
     'personne:client:lecture',
-    'produit:read'])]
+    'produit:read',
+    'produit:complement:read'])]
     #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 
 
-    #[Groups(["produit:write:burger", "produit:write:boisson", "produit:write:frite", 'produit:complement:read'])]
+    #[Groups(["produit:write:burger", "produit:write:boisson", "produit:write:frite"])]
     #[SerializedName("image")]
     private $plainimage;
 

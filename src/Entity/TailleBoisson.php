@@ -48,7 +48,7 @@ class TailleBoisson
         ])]
     private $id;
     // 
-    #[Groups(['produit:complement:read','produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture','taille:read','taille:lecture','get1produit','taille:write'])]
+    #[Groups(['produit:complement:read','produit:menu:read','produit:menu:lecture','produit:menuTaille:lecture','taille:read','taille:lecture','get1produit','taille:write',"produit:read:boisson"])]
     #[ORM\Column(type: 'string', length: 255)]
     private $libelle;
     

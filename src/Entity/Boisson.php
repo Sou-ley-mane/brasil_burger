@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 // use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
@@ -32,6 +34,7 @@ class Boisson extends Produit
     
     #[Groups(["produit:write:boisson","produit:read:boisson","produit:menu:read"])]
     #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'boissons',cascade:["persist"])]
+    #[SerializedName("tailles")]
     private $tailleBoissons;
     
     #[Groups(["produit:write:boisson","produit:read:boisson",'produit:complement:read'])]
