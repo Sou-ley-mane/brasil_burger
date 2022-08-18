@@ -278,7 +278,6 @@ class Produit
 
     public function getImage()
     {
-        // dd();
         return (is_resource($this->image) ? utf8_encode(base64_encode(stream_get_contents($this->image))) : $this->image);
         //   base64_encode(stream_get_contents($this->image)) ;
     }

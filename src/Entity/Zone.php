@@ -34,16 +34,25 @@ class Zone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["commande:read","commande:lecture", 'zone:read','zone:lecture'])]
+    #[Groups([
+        "commande:write", 
+        "commande:read",
+        "commande:lecture",
+       
+    'zone:read',
+    'zone:lecture'])]
     private $id;
 
 
-    #[Groups(["zone:write",
+    #[Groups([
+    "zone:write",
     'zone:read',
     "commande:read",
     "commande:lecture",
     'personne:client:read',
-    'personne:client:lecture'])]
+    'personne:client:lecture',
+    'livraison:lecture',
+    'livraison:lectureSeul'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $nomZone;
 

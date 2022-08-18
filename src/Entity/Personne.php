@@ -22,7 +22,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     'personne:client:read',
     'personne:client:lecture',
     'personne:livreur:read',
-    'personne:livreur:lecture'    ])]
+    'personne:livreur:lecture' ,
+    'livraison:lecture',
+    'livraison:lectureSeul'   ])]
     private $id;
 
     #[Groups([
@@ -34,7 +36,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'personne:livreur:write',
         'personne:livreur:read',
         'commande:read',
-        'zone:read','zone:lecture'
+        'zone:read','zone:lecture',
+        'livraison:lecture','livraison:lectureSeul'
         ])]
     // #[Groups(['personne:read:client','personne:livreur:read'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -50,15 +53,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'personne:livreur:write',
         'personne:livreur:read',
         'commande:read',
-        'zone:read','zone:lecture'
+        'zone:read','zone:lecture',
+        'livraison:lecture','livraison:lectureSeul'
     
     ])]
     #[ORM\Column(type: 'string', length: 200)]
     private $nom;
 
-    // #[Groups([
-    //     "personne:gestionnaire:read"
-    // ])]
+    #[Groups([
+        'personne:livreur:read',
+        'personne:livreur:lecture',
+        'personne:livreur:item'
+    ])]
     #[ORM\Column(type: 'string',nullable:true, length: 200)]
     private $etat;
 

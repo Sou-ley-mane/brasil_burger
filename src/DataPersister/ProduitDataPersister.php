@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use App\Repository\GestionnaireRepository;
 use PhpParser\Node\Stmt\ElseIf_;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -25,10 +26,11 @@ private EntityManagerInterface  $em ;
 
 
 
-public function __construct(TokenStorageInterface $token,EntityManagerInterface $em)
+public function __construct(TokenStorageInterface $token,EntityManagerInterface $em,GestionnaireRepository $gestionnaire)
 {
     $this->token = $token->getToken();
     $this->em = $em;   
+    $this->gestionnaire=$gestionnaire;
 } 
 // // Verification de la prise en  charge des données
 public function supports($data): bool
@@ -48,7 +50,9 @@ public function persist($data,array $context=[])
      $data->setImage(file_get_contents($data->getPlainimage()));
   }
 
-  $data->setGestionnaire($this->token->getUser()); 
+  // $data->setGestionnaire($this->token->getUser()); 
+  $data->setGestionnaire($this->gestionnaire->find(6)); 
+
   // $data->setGestionnaire(2); 
 
 $this->em->persist($data);

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivraisonRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -21,29 +22,40 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'denormalization_context' => ['groups' => ['livraison:ecriture']]
 
     ]],
-    itemOperations:["put","get"]
+    itemOperations:["put","get"=>[
+        'normalization_context' => ['groups' => ['livraison:lectureSeul']]
+    ]]
 )]
 class Livraison
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['livraison:lecture','livraison:ecriture','livraison:lectureSeul'])]
     private $id;
 
     
     #[ORM\Column(type: 'string', length: 255)]
     private $etatLivraison;
 
-    #[Groups(['livraison:lecture','livraison:ecriture'])]
+    #[Groups(['livraison:lecture','livraison:ecriture','livraison:lectureSeul'])]
     #[ORM\ManyToOne(targetEntity: Livreur::class, inversedBy: 'livraisons')]
     private $livreur;
 
-    #[Groups(['livraison:lecture','livraison:ecriture','commande:read'])]
-    // #[Groups([])]
+    // #[ApiSubresource()]
+    #[Groups([
+        'livraison:lecture',
+        'livraison:ecriture',
+        'livraison:lectureSeul',
+        'commande:read'])]
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
     private $commandes;
 
-    #[Groups(['livraison:lecture','livraison:ecriture','commande:write'])]
+    #[Groups([
+        'livraison:lecture',
+        'livraison:ecriture',
+        'livraison:lectureSeul',
+        'commande:write'])]
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'livraisons')]
     private $zone;
 

@@ -43,33 +43,37 @@ return $data instanceof Livraison;
 public function persist($data){
     $lesCommandes=$data->getCommandes();
     foreach ($lesCommandes as $commande) {
-
         if ($commande->getEtatCmd()=="cours") {
             $result="la commande numéro  ".$commande->getNumCmd()."  est déja en cours de livraison";
             return new JsonResponse($result ,400);
         }
+
+        $liv=$data->getLivreur();
             $livreursDisponible=$this->livreur->findByEtat("disponible"); 
-            if (empty($livreursDisponible[array_rand($livreursDisponible)])) {
-                $result="Aucun livreur n'est pas disponible";
-                return new JsonResponse($result ,400);
-            }               
-            $livreurCommande=$livreursDisponible[array_rand($livreursDisponible)];
+            // dd($livreursDisponible);   
+            // if (empty($livreursDisponible[array_rand($livreursDisponible)])) {
+            //     $result="Aucun livreur n'est pas disponible";
+            //     return new JsonResponse($result ,400);
+            // }               
+            // $livreurCommande=$livreursDisponible[array_rand($livreursDisponible)];
         // if ($livreurCommande->getEtat()=="indisponible") {
-        //     $result="le livreur . .n'est pas disponible";
-        //     return new JsonResponse($result ,400);
-        //le livreur pour livrer la commande
-        $data->setLivreur($livreurCommande);
-        $data->setEtatLivraison("false");
+            // $result="le livreur . .n'est pas disponible";
+            // return new JsonResponse($result ,400);
+        // le livreur pour livrer la commande
+        // $data->setLivreur($livreurCommande);
+        $data->setEtatLivraison("false"); 
         $this->entityManager->persist($data);
         $commande->setEtatCmd("cours");
+        $liv->setEtat("indisponible");
         //LE gestionnaire qui a gérer la livraison
         // $commande->setGestionnaire($this->token ->getUser());
         $commande->setGestionnaire($this->gestionnaireRepository->find(6));
-
         $this->entityManager->persist($commande);  
-        $livreurCommande->setEtat("indisponible");   
-        $this-> entityManager->persist($livreurCommande);
+        $this->entityManager->persist($liv); 
+        // $this->livreurCommande->setEtat("indisponible");   
+        // $this-> entityManager->persist($livreurCommande);
         $this->entityManager->flush();
+// }
 }
 }
 //Suppression des données

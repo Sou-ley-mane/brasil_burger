@@ -50,7 +50,9 @@ class Commande
         'commande:read',
         'commande:lecture',
         'zone:read',
-        'zone:lecture'
+        'zone:lecture',
+        'livraison:lecture',
+        'livraison:lectureSeul'
     ])]
     private $id;
 
@@ -59,7 +61,8 @@ class Commande
         'personne:client:read',
         'personne:client:lecture',
         'zone:read',
-        'zone:lecture'
+        'zone:lecture',
+        'livraison:lecture','livraison:lectureSeul'
     ])]
     #[ORM\Column(type: 'string', length: 255)]
     private $etatCmd = "En cours";
@@ -67,7 +70,8 @@ class Commande
     #[Groups([
         'commande:read',
         'personne:client:read',
-        'personne:client:lecture', 'zone:read', 'zone:lecture'
+        'personne:client:lecture', 'zone:read', 'zone:lecture',
+        'livraison:lecture','livraison:lectureSeul'
     ])]
     #[ORM\Column(type: 'string')]
     private $numCmd;
@@ -77,12 +81,18 @@ class Commande
     #[Groups([
         'commande:read',
         'personne:client:read',
-        'personne:client:lecture', 'zone:read', 'zone:lecture'
+        'personne:client:lecture', 'zone:read', 'zone:lecture',
+        'livraison:lecture','livraison:lectureSeul'
     ])]
     #[ORM\Column(type: 'datetime')]
     private $dateCmd;
 
-    // #[Groups(["commande:write"])]
+    #[Groups([
+        'commande:read',
+        'commande:lecture',
+        'livraison:lecture',
+        'livraison:lectureSeul'
+    ])]
     #[ORM\Column(type: 'string', length: 255)]
     private $etatPaiement = "non";
 
@@ -129,7 +139,8 @@ class Commande
     private $ligneCommandes;
 
     #[Groups([
-        "commande:write", "commande:read",
+        "commande:write", 
+        "commande:read",
         "commande:lecture",
         'personne:client:read',
         'personne:client:lecture'

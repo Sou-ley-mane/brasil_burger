@@ -55,7 +55,7 @@ if ($data instanceof Livreur) {
    $data->setMatricule("Moto-".date("His")."-DK");
    $data->setRoles(["ROLE_LIVREUR"]);
    $data->setEtat("disponible");
-   $data->setGestionnaire($this->token ->getUser());
+//    $data->setGestionnaire($this->token ->getUser());
 }elseif ($data instanceof Gestionnaire) {
  $data->setEtat("actif");
  $data->setRoles(["ROLE_GESTIONNAIRE"]);

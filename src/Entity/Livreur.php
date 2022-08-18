@@ -24,7 +24,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     ]
 ],
-    itemOperations:["put","get"=>[
+    itemOperations:["put"=>[
+        'personne:livreur:item'
+    ]
+    ,"get"=>[
         'normalization_context' => ['groups' => ['personne:livreur:lecture']]
     ]]
 )]
@@ -33,14 +36,17 @@ class Livreur extends User
    
     #[Groups([
         'personne:livreur:read',
-        'personne:livreur:lecture'
+        'personne:livreur:lecture',
+        'livraison:lecture','livraison:lectureSeul'
         ])]
     #[ORM\Column(type: 'string', length: 255)]
     private $matricule;
 
     #[Groups([
         'personne:livreur:read',
-        'personne:livreur:write']
+        'personne:livreur:write',
+        'livraison:lecture','livraison:lectureSeul'
+        ]
         )]
     #[ORM\Column(type: 'string', length: 255)]
     private $telephoneLivreur;
